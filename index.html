@@ -3,438 +3,429 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coach Jouley — CL Predictions</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Coach Jouley Predictions — NBA Playoffs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f4f1eb;
-  --pitch-grass-1: #4a8c3f;
-  --pitch-grass-2: #438537;
-  --card: #ffffff;
-  --text: #1a1a1a;
-  --text-sec: #6b6b6b;
-  --text-muted: #a0a0a0;
-  --accent: #c8a44e;
-  --accent-dark: #a8873a;
-  --shadow: rgba(0,0,0,0.06);
-  --radius: 14px;
-  --bayern: #dc052d;
-  --real: #00529f;
-  --arsenal: #EF0107;
-  --sporting: #008847;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.header {
-  text-align: center;
-  padding: 32px 20px 20px;
-}
-
-.header h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.4rem;
-  letter-spacing: 3px;
-  line-height: 1;
-}
-
-.header h1 span { color: var(--accent-dark); }
-
-.header .tagline {
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 5px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 20px;
-  margin-bottom: 24px;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  background: var(--card);
-  border: 2px solid transparent;
-  border-radius: 60px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px var(--shadow);
-  user-select: none;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.05rem;
-  letter-spacing: 1px;
-  color: var(--text);
-}
-
-.tab:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--shadow); }
-.tab.active { border-color: var(--accent); box-shadow: 0 4px 20px rgba(200,164,78,0.18); }
-.tab .tab-vs { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 2px; }
-
-.match-view { display: none; animation: fadeIn 0.3s ease; }
-.match-view.active { display: block; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-
-.match-bar {
-  max-width: 960px;
-  margin: 0 auto 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 0 16px;
-}
-
-.match-bar .name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
-}
-
-.match-bar .vs {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  letter-spacing: 3px;
-}
-
-.pitch-wrapper { max-width: 960px; margin: 0 auto; padding: 0 16px; }
-
-.pitch {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 2.1 / 1;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
-  background: repeating-linear-gradient(90deg, var(--pitch-grass-1) 0px, var(--pitch-grass-1) 60px, var(--pitch-grass-2) 60px, var(--pitch-grass-2) 120px);
-}
-
-.pitch-markings { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
-.pitch-markings svg { width: 100%; height: 100%; }
-.pitch-players { position: absolute; inset: 0; z-index: 2; }
-
-.player {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-}
-
-.player-dot {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.8rem;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  border: 2px solid rgba(255,255,255,0.7);
-  transition: transform 0.2s;
-  position: relative;
-}
-
-.player:hover .player-dot { transform: scale(1.15); }
-
-.player-label {
-  margin-top: 3px;
-  font-size: 0.52rem;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
-  white-space: nowrap;
-  text-align: center;
-  letter-spacing: 0.3px;
-}
-
-.team-bayern .player-dot { background: var(--bayern); }
-.team-real .player-dot { background: var(--real); }
-.team-arsenal .player-dot { background: var(--arsenal); }
-.team-sporting .player-dot { background: var(--sporting); }
-.player.gk .player-dot { background: #e8a820 !important; color: #333; }
-
-.player.captain .player-dot::after {
-  content: 'C';
-  position: absolute;
-  top: -6px; right: -6px;
-  font-size: 0.45rem;
-  background: var(--accent);
-  color: #fff;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-
-/* Stats */
-.stats-wrapper {
-  max-width: 960px;
-  margin: 20px auto 0;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.stats-panel {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 12px var(--shadow);
-  overflow: hidden;
-}
-
-.stats-panel-header {
-  padding: 14px 18px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.15rem;
-  letter-spacing: 1.5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 2px solid;
-}
-
-.stats-panel-header .dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.stats-section { padding: 10px 16px 6px; }
-
-.stats-section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 2px;
-  color: var(--text-muted);
-  padding: 6px 0 4px;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 2px;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 0;
-  font-size: 0.72rem;
-  border-bottom: 1px solid #f5f4f1;
-}
-
-.stat-row:last-child { border-bottom: none; }
-.stat-row .label { color: var(--text-sec); font-weight: 500; }
-.stat-row .value { font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
-
-.stats-panel-footer { height: 4px; }
-
-.stats-placeholder {
-  padding: 30px 16px;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  text-align: center;
-  font-style: italic;
-}
-
-.footer {
-  text-align: center;
-  padding: 28px 20px 18px;
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  letter-spacing: 1px;
-}
-
-@media (max-width: 700px) {
-  .pitch { aspect-ratio: 1.8 / 1; }
-  .player-dot { width: 28px; height: 28px; font-size: 0.65rem; }
-  .player-label { font-size: 0.44rem; }
-  .stats-wrapper { grid-template-columns: 1fr; }
-  .tab { padding: 8px 14px; font-size: 0.9rem; }
-  .header h1 { font-size: 1.8rem; }
-  .match-bar .name { font-size: 1.1rem; }
-}
-
-@media (max-width: 480px) {
-  .pitch { aspect-ratio: 1.5 / 1; }
-  .player-dot { width: 24px; height: 24px; font-size: 0.58rem; border-width: 1.5px; }
-  .player-label { font-size: 0.4rem; }
-  .player.captain .player-dot::after { width: 11px; height: 11px; font-size: 0.38rem; top: -4px; right: -4px; }
-}
+  :root {
+    --bg: #06080c;
+    --card: rgba(255,255,255,0.025);
+    --card-border: rgba(255,255,255,0.06);
+    --card-hover: rgba(255,255,255,0.05);
+    --gold: #f5c542;
+    --gold-glow: rgba(245,197,66,0.18);
+    --gold-border: rgba(245,197,66,0.55);
+    --gold-soft: rgba(245,197,66,0.08);
+    --text: #e8e8e8;
+    --text-dim: #777;
+    --text-muted: #3a3a3a;
+    --input-bg: rgba(255,255,255,0.02);
+    --input-border: rgba(255,255,255,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh; overflow-x: hidden; position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1;
+  }
+  body::after {
+    content: ''; position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 600px;
+    background: radial-gradient(ellipse, var(--gold-glow) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+  .container {
+    position: relative; z-index: 2;
+    max-width: 1100px; margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+  .hero { text-align: center; margin-bottom: 60px; }
+  .hero-label {
+    font-size: 11px; letter-spacing: 0.4em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 18px; opacity: 0.85;
+  }
+  .hero h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 700; letter-spacing: -0.01em;
+    text-transform: uppercase; line-height: 0.95;
+    margin-bottom: 14px;
+  }
+  .hero-sub {
+    font-size: 11px; letter-spacing: 0.25em;
+    color: var(--text-dim); text-transform: uppercase;
+  }
+  .hero-divider {
+    width: 60px; height: 2px; background: var(--gold);
+    margin: 26px auto 0; opacity: 0.7;
+  }
+  .game {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    margin-bottom: 32px; padding: 32px;
+    transition: border-color 0.2s ease;
+  }
+  .game:hover { border-color: rgba(255,255,255,0.1); }
+  .game-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 28px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .game-tag {
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--gold); text-transform: uppercase; font-weight: 600;
+  }
+  .game-time {
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase;
+  }
+  .teams {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 18px; align-items: center; margin-bottom: 36px;
+  }
+  .team {
+    position: relative;
+    background: rgba(255,255,255,0.015);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 28px 16px; cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center; overflow: hidden;
+  }
+  .team::after {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold-soft);
+    opacity: 0; transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .team:hover {
+    border-color: rgba(245,197,66,0.25);
+    background: var(--card-hover);
+  }
+  .team.selected {
+    border-color: var(--gold-border);
+    box-shadow: 0 0 0 1px var(--gold-border), 0 0 24px var(--gold-glow);
+  }
+  .team.selected::after { opacity: 1; }
+  .team-logo {
+    width: 80px; height: 80px;
+    margin: 0 auto 14px; object-fit: contain;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+  .team-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px; text-transform: uppercase;
+    letter-spacing: 0.05em; font-weight: 600;
+    position: relative; z-index: 1;
+  }
+  .team-loc {
+    font-size: 10px; color: var(--text-dim);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-top: 4px; position: relative; z-index: 1;
+  }
+  .vs {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px; color: var(--gold);
+    font-weight: 700; letter-spacing: 0.1em; padding: 0 4px;
+  }
+  .bet-section { display: grid; gap: 16px; }
+  .bet-row {
+    display: grid; grid-template-columns: 130px 1fr;
+    align-items: center; gap: 16px;
+  }
+  .bet-label {
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--text-dim); text-transform: uppercase; font-weight: 600;
+  }
+  .bet-controls {
+    display: flex; gap: 8px;
+    align-items: center; flex-wrap: wrap;
+  }
+  .line-input {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; padding: 10px 12px;
+    border-radius: 3px; width: 90px;
+    text-align: center;
+    transition: all 0.15s ease;
+    -moz-appearance: textfield;
+  }
+  .line-input::-webkit-outer-spin-button,
+  .line-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; margin: 0;
+  }
+  .line-input:focus {
+    outline: none;
+    border-color: var(--gold-border);
+    background: rgba(245,197,66,0.04);
+  }
+  .line-input::placeholder { color: var(--text-muted); }
+  .pick-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 16px; border-radius: 3px;
+    cursor: pointer; transition: all 0.15s ease;
+    font-weight: 600;
+  }
+  .pick-btn:hover {
+    border-color: rgba(245,197,66,0.3);
+    color: var(--text);
+  }
+  .pick-btn.active {
+    background: var(--gold-soft);
+    border-color: var(--gold-border);
+    color: var(--gold);
+    box-shadow: 0 0 16px var(--gold-glow);
+  }
+  .actions {
+    display: flex; justify-content: center;
+    gap: 14px; margin-top: 50px;
+  }
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase;
+    padding: 12px 24px; border-radius: 3px;
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .reset-btn:hover {
+    border-color: rgba(245,80,80,0.4);
+    color: #f87171;
+  }
+  .footer {
+    text-align: center; margin-top: 60px;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+  }
+  .footer .gold-dot { color: var(--gold); margin: 0 8px; }
+  @media (max-width: 600px) {
+    .container { padding: 40px 16px 60px; }
+    .game { padding: 22px 18px; }
+    .teams { gap: 10px; }
+    .team { padding: 20px 8px; }
+    .team-logo { width: 60px; height: 60px; }
+    .team-name { font-size: 14px; }
+    .vs { font-size: 14px; }
+    .bet-row { grid-template-columns: 1fr; gap: 8px; }
+    .bet-label { font-size: 9px; }
+    .pick-btn { font-size: 10px; padding: 9px 12px; }
+    .line-input { width: 80px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
+<div class="container">
 
-<div class="header">
-  <h1>COACH <span>JOULEY</span></h1>
-  <div class="tagline">Champions League Predictions</div>
-</div>
+  <header class="hero">
+    <div class="hero-label">Coach Jouley</div>
+    <h1>Predictions</h1>
+    <div class="hero-sub">NBA Playoffs · Round 1 · Game 2</div>
+    <div class="hero-divider"></div>
+  </header>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchMatch(0)">Bayern <span class="tab-vs">VS</span> Real Madrid</div>
-  <div class="tab" onclick="switchMatch(1)">Arsenal <span class="tab-vs">VS</span> Sporting</div>
-</div>
+  <!-- GAME 1: Pistons vs Magic -->
+  <article class="game" data-game="g1">
+    <div class="game-header">
+      <span class="game-tag">East · First Round · G2</span>
+      <span class="game-time">Apr 22 · Detroit</span>
+    </div>
 
-<!-- ===== MATCH 1 ===== -->
-<div class="match-view active" id="match0">
-  <div class="match-bar">
-    <div class="name">FC Bayern</div>
-    <div class="vs">VS</div>
-    <div class="name">Real Madrid</div>
-  </div>
+    <div class="teams">
+      <div class="team" data-team="DET">
+        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#1d428a"/>
+          <circle cx="50" cy="50" r="38" fill="#c8102e"/>
+          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="32" fill="#fff">DET</text>
+        </svg>
+        <div class="team-name">Pistons</div>
+        <div class="team-loc">Detroit</div>
+      </div>
 
-  <div class="pitch-wrapper">
-    <div class="pitch">
-      <div class="pitch-markings"><svg viewBox="0 0 1000 476" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="960" height="436" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><line x1="500" y1="20" x2="500" y2="456" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><circle cx="500" cy="238" r="65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="500" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><rect x="20" y="118" width="120" height="240" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><rect x="20" y="170" width="45" height="136" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="115" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><rect x="860" y="118" width="120" height="240" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><rect x="935" y="170" width="45" height="136" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="885" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><path d="M20 35 A15 15 0 0 1 35 20" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M965 20 A15 15 0 0 1 980 35" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M20 441 A15 15 0 0 0 35 456" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M965 456 A15 15 0 0 0 980 441" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/></svg></div>
-      <div class="pitch-players">
-        <!-- BAYERN -->
-        <div class="player gk captain team-bayern" style="left:5%;top:50%"><div class="player-dot">1</div><div class="player-label">Neuer</div></div>
-        <div class="player team-bayern" style="left:16%;top:15%"><div class="player-dot">44</div><div class="player-label">Stanišić</div></div>
-        <div class="player team-bayern" style="left:16%;top:38%"><div class="player-dot">2</div><div class="player-label">Upamecano</div></div>
-        <div class="player team-bayern" style="left:16%;top:62%"><div class="player-dot">4</div><div class="player-label">Tah</div></div>
-        <div class="player team-bayern" style="left:16%;top:85%"><div class="player-dot">27</div><div class="player-label">Laimer</div></div>
-        <div class="player team-bayern" style="left:28%;top:38%"><div class="player-dot">6</div><div class="player-label">Kimmich</div></div>
-        <div class="player team-bayern" style="left:28%;top:62%"><div class="player-dot">45</div><div class="player-label">Pavlović</div></div>
-        <div class="player team-bayern" style="left:38%;top:18%"><div class="player-dot">17</div><div class="player-label">Olise</div></div>
-        <div class="player team-bayern" style="left:38%;top:50%"><div class="player-dot">7</div><div class="player-label">Gnabry</div></div>
-        <div class="player team-bayern" style="left:38%;top:82%"><div class="player-dot">14</div><div class="player-label">L. Díaz</div></div>
-        <div class="player team-bayern" style="left:46%;top:50%"><div class="player-dot">9</div><div class="player-label">Kane</div></div>
-        <!-- REAL MADRID -->
-        <div class="player team-real" style="left:54%;top:35%"><div class="player-dot">7</div><div class="player-label">Vinícius Jr.</div></div>
-        <div class="player team-real" style="left:54%;top:65%"><div class="player-dot">10</div><div class="player-label">Mbappé</div></div>
-        <div class="player team-real" style="left:64%;top:15%"><div class="player-dot">15</div><div class="player-label">Güler</div></div>
-        <div class="player captain team-real" style="left:64%;top:38%"><div class="player-dot">8</div><div class="player-label">Valverde</div></div>
-        <div class="player team-real" style="left:64%;top:62%"><div class="player-dot">5</div><div class="player-label">Bellingham</div></div>
-        <div class="player team-real" style="left:64%;top:85%"><div class="player-dot">21</div><div class="player-label">B. Díaz</div></div>
-        <div class="player team-real" style="left:82%;top:15%"><div class="player-dot">23</div><div class="player-label">Mendy</div></div>
-        <div class="player team-real" style="left:82%;top:38%"><div class="player-dot">22</div><div class="player-label">Rüdiger</div></div>
-        <div class="player team-real" style="left:82%;top:62%"><div class="player-dot">3</div><div class="player-label">Militão</div></div>
-        <div class="player team-real" style="left:82%;top:85%"><div class="player-dot">12</div><div class="player-label">Alexander-Arnold</div></div>
-        <div class="player gk team-real" style="left:95%;top:50%"><div class="player-dot">13</div><div class="player-label">Lunin</div></div>
+      <div class="vs">VS</div>
+
+      <div class="team" data-team="ORL">
+        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#0077c0"/>
+          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="32" fill="#c4ced4">ORL</text>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2"/>
+        </svg>
+        <div class="team-name">Magic</div>
+        <div class="team-loc">Orlando</div>
       </div>
     </div>
-  </div>
 
-  <div class="stats-wrapper">
-    <!-- BAYERN STATS -->
-    <div class="stats-panel">
-      <div class="stats-panel-header" style="border-color:var(--bayern);"><div class="dot" style="background:var(--bayern);"></div>FC Bayern — Stats</div>
-      <div class="stats-section"><div class="stats-section-title">Running Performance (per match)</div><div class="stat-row"><span class="label">Distance covered</span><span class="value">118 km</span></div><div class="stat-row"><span class="label">Number of sprints</span><span class="value">111.2</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Attacking</div><div class="stat-row"><span class="label">Goals per game</span><span class="value">3.1</span></div><div class="stat-row"><span class="label">Penalty goals</span><span class="value">3/4</span></div><div class="stat-row"><span class="label">Free kick goals</span><span class="value">0/4</span></div><div class="stat-row"><span class="label">Goals from inside the box</span><span class="value">30/146</span></div><div class="stat-row"><span class="label">Goals from outside the box</span><span class="value">3/63</span></div><div class="stat-row"><span class="label">Left-footed goals</span><span class="value">9</span></div><div class="stat-row"><span class="label">Right-footed goals</span><span class="value">23</span></div><div class="stat-row"><span class="label">Headed goals</span><span class="value">1</span></div><div class="stat-row"><span class="label">Big chances per game</span><span class="value">5.4</span></div><div class="stat-row"><span class="label">Big chances missed per game</span><span class="value">3.3</span></div><div class="stat-row"><span class="label">Total shots per game</span><span class="value">19</span></div><div class="stat-row"><span class="label">Shots on target per game</span><span class="value">8.2</span></div><div class="stat-row"><span class="label">Shots off target per game</span><span class="value">6.7</span></div><div class="stat-row"><span class="label">Blocked shots per game</span><span class="value">4.1</span></div><div class="stat-row"><span class="label">Succ. dribbles per game</span><span class="value">10.1</span></div><div class="stat-row"><span class="label">Corners per game</span><span class="value">5.5</span></div><div class="stat-row"><span class="label">Free kicks per game</span><span class="value">7.9</span></div><div class="stat-row"><span class="label">Hit woodwork</span><span class="value">13</span></div><div class="stat-row"><span class="label">Counter attacks</span><span class="value">13</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Passes</div><div class="stat-row"><span class="label">Ball possession</span><span class="value">59.9%</span></div><div class="stat-row"><span class="label">Accurate passes</span><span class="value">575 (90.1%)</span></div><div class="stat-row"><span class="label">Acc. own half</span><span class="value">241 (94.2%)</span></div><div class="stat-row"><span class="label">Acc. opposition half</span><span class="value">333 (87.4%)</span></div><div class="stat-row"><span class="label">Acc. long balls</span><span class="value">21.5 (66.2%)</span></div><div class="stat-row"><span class="label">Acc. crosses</span><span class="value">1.7 (15%)</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Defending</div><div class="stat-row"><span class="label">Clean sheets</span><span class="value">2</span></div><div class="stat-row"><span class="label">Goals conceded per game</span><span class="value">1</span></div><div class="stat-row"><span class="label">Tackles per game</span><span class="value">14.4</span></div><div class="stat-row"><span class="label">Interceptions per game</span><span class="value">8.1</span></div><div class="stat-row"><span class="label">Clearances per game</span><span class="value">15.3</span></div><div class="stat-row"><span class="label">Saves per game</span><span class="value">4</span></div><div class="stat-row"><span class="label">Balls recovered per game</span><span class="value">48.3</span></div><div class="stat-row"><span class="label">Errors leading to shot</span><span class="value">7</span></div><div class="stat-row"><span class="label">Errors leading to goal</span><span class="value">4</span></div><div class="stat-row"><span class="label">Penalties committed</span><span class="value">0</span></div><div class="stat-row"><span class="label">Penalty goals conceded</span><span class="value">0</span></div><div class="stat-row"><span class="label">Clearance off line</span><span class="value">0</span></div><div class="stat-row"><span class="label">Last man tackle</span><span class="value">2</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Other</div><div class="stat-row"><span class="label">Duels won per game</span><span class="value">40.2 (49.1%)</span></div><div class="stat-row"><span class="label">Ground duels won</span><span class="value">32.3 (49.6%)</span></div><div class="stat-row"><span class="label">Aerial duels won</span><span class="value">7.9 (47.3%)</span></div><div class="stat-row"><span class="label">Possession lost per game</span><span class="value">101.8</span></div><div class="stat-row"><span class="label">Throw-ins per game</span><span class="value">14.7</span></div><div class="stat-row"><span class="label">Goal kicks per game</span><span class="value">6.5</span></div><div class="stat-row"><span class="label">Offsides per game</span><span class="value">1.5</span></div><div class="stat-row"><span class="label">Fouls per game</span><span class="value">10.7</span></div><div class="stat-row"><span class="label">Yellow cards per game</span><span class="value">2</span></div><div class="stat-row"><span class="label">Red cards</span><span class="value">2</span></div></div>
-      <div class="stats-panel-footer" style="background:var(--bayern);"></div>
-    </div>
+    <div class="bet-section">
+      <div class="bet-row">
+        <div class="bet-label">Over / Under</div>
+        <div class="bet-controls">
+          <input type="number" step="0.5" class="line-input" data-field="ou-line" placeholder="—">
+          <button class="pick-btn" data-field="ou-pick" data-value="OVER">Over</button>
+          <button class="pick-btn" data-field="ou-pick" data-value="UNDER">Under</button>
+        </div>
+      </div>
 
-    <!-- REAL MADRID STATS -->
-    <div class="stats-panel">
-      <div class="stats-panel-header" style="border-color:var(--real);"><div class="dot" style="background:var(--real);"></div>Real Madrid — Stats</div>
-      <div class="stats-section"><div class="stats-section-title">Running Performance (per match)</div><div class="stat-row"><span class="label">Distance covered</span><span class="value">110.6 km</span></div><div class="stat-row"><span class="label">Number of sprints</span><span class="value">112.8</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Attacking</div><div class="stat-row"><span class="label">Goals per game</span><span class="value">2.3</span></div><div class="stat-row"><span class="label">Penalty goals</span><span class="value">4/5</span></div><div class="stat-row"><span class="label">Free kick goals</span><span class="value">0/5</span></div><div class="stat-row"><span class="label">Goals from inside the box</span><span class="value">27/157</span></div><div class="stat-row"><span class="label">Goals from outside the box</span><span class="value">2/75</span></div><div class="stat-row"><span class="label">Left-footed goals</span><span class="value">4</span></div><div class="stat-row"><span class="label">Right-footed goals</span><span class="value">22</span></div><div class="stat-row"><span class="label">Headed goals</span><span class="value">3</span></div><div class="stat-row"><span class="label">Big chances per game</span><span class="value">4</span></div><div class="stat-row"><span class="label">Big chances missed per game</span><span class="value">2.4</span></div><div class="stat-row"><span class="label">Total shots per game</span><span class="value">17.8</span></div><div class="stat-row"><span class="label">Shots on target per game</span><span class="value">7.1</span></div><div class="stat-row"><span class="label">Shots off target per game</span><span class="value">5.9</span></div><div class="stat-row"><span class="label">Blocked shots per game</span><span class="value">4.8</span></div><div class="stat-row"><span class="label">Succ. dribbles per game</span><span class="value">10.5</span></div><div class="stat-row"><span class="label">Corners per game</span><span class="value">6</span></div><div class="stat-row"><span class="label">Free kicks per game</span><span class="value">11.1</span></div><div class="stat-row"><span class="label">Hit woodwork</span><span class="value">7</span></div><div class="stat-row"><span class="label">Counter attacks</span><span class="value">32</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Passes</div><div class="stat-row"><span class="label">Ball possession</span><span class="value">55.3%</span></div><div class="stat-row"><span class="label">Accurate passes</span><span class="value">466 (88.3%)</span></div><div class="stat-row"><span class="label">Acc. own half</span><span class="value">222 (92.3%)</span></div><div class="stat-row"><span class="label">Acc. opposition half</span><span class="value">243 (84.9%)</span></div><div class="stat-row"><span class="label">Acc. long balls</span><span class="value">18.6 (57.3%)</span></div><div class="stat-row"><span class="label">Acc. crosses</span><span class="value">3.5 (28%)</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Defending</div><div class="stat-row"><span class="label">Clean sheets</span><span class="value">4</span></div><div class="stat-row"><span class="label">Goals conceded per game</span><span class="value">1.2</span></div><div class="stat-row"><span class="label">Tackles per game</span><span class="value">15.1</span></div><div class="stat-row"><span class="label">Interceptions per game</span><span class="value">8.9</span></div><div class="stat-row"><span class="label">Clearances per game</span><span class="value">20.9</span></div><div class="stat-row"><span class="label">Saves per game</span><span class="value">5.1</span></div><div class="stat-row"><span class="label">Balls recovered per game</span><span class="value">49.2</span></div><div class="stat-row"><span class="label">Errors leading to shot</span><span class="value">21</span></div><div class="stat-row"><span class="label">Errors leading to goal</span><span class="value">5</span></div><div class="stat-row"><span class="label">Penalties committed</span><span class="value">2</span></div><div class="stat-row"><span class="label">Penalty goals conceded</span><span class="value">2</span></div><div class="stat-row"><span class="label">Clearance off line</span><span class="value">2</span></div><div class="stat-row"><span class="label">Last man tackle</span><span class="value">3</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Other</div><div class="stat-row"><span class="label">Duels won per game</span><span class="value">45.8 (50.4%)</span></div><div class="stat-row"><span class="label">Ground duels won</span><span class="value">36.5 (50.3%)</span></div><div class="stat-row"><span class="label">Aerial duels won</span><span class="value">9.2 (50.8%)</span></div><div class="stat-row"><span class="label">Possession lost per game</span><span class="value">104</span></div><div class="stat-row"><span class="label">Throw-ins per game</span><span class="value">11.4</span></div><div class="stat-row"><span class="label">Goal kicks per game</span><span class="value">6.5</span></div><div class="stat-row"><span class="label">Offsides per game</span><span class="value">1.1</span></div><div class="stat-row"><span class="label">Fouls per game</span><span class="value">10.7</span></div><div class="stat-row"><span class="label">Yellow cards per game</span><span class="value">2</span></div><div class="stat-row"><span class="label">Red cards</span><span class="value">3</span></div></div>
-      <div class="stats-panel-footer" style="background:var(--real);"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MATCH 2 ===== -->
-<div class="match-view" id="match1">
-  <div class="match-bar">
-    <div class="name">Arsenal</div>
-    <div class="vs">VS</div>
-    <div class="name">Sporting CP</div>
-  </div>
-
-  <div class="pitch-wrapper">
-    <div class="pitch">
-      <div class="pitch-markings"><svg viewBox="0 0 1000 476" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="960" height="436" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><line x1="500" y1="20" x2="500" y2="456" stroke="rgba(255,255,255,0.3)" stroke-width="2"/><circle cx="500" cy="238" r="65" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="500" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><rect x="20" y="118" width="120" height="240" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><rect x="20" y="170" width="45" height="136" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="115" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><rect x="860" y="118" width="120" height="240" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><rect x="935" y="170" width="45" height="136" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><circle cx="885" cy="238" r="3" fill="rgba(255,255,255,0.3)"/><path d="M20 35 A15 15 0 0 1 35 20" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M965 20 A15 15 0 0 1 980 35" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M20 441 A15 15 0 0 0 35 456" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/><path d="M965 456 A15 15 0 0 0 980 441" stroke="rgba(255,255,255,0.3)" stroke-width="2" fill="none"/></svg></div>
-      <div class="pitch-players">
-        <!-- ARSENAL -->
-        <div class="player gk team-arsenal" style="left:5%;top:50%"><div class="player-dot">1</div><div class="player-label">Raya</div></div>
-        <div class="player team-arsenal" style="left:16%;top:15%"><div class="player-dot">3</div><div class="player-label">Mosquera</div></div>
-        <div class="player team-arsenal" style="left:16%;top:38%"><div class="player-dot">2</div><div class="player-label">Saliba</div></div>
-        <div class="player team-arsenal" style="left:16%;top:62%"><div class="player-dot">6</div><div class="player-label">Gabriel</div></div>
-        <div class="player team-arsenal" style="left:16%;top:85%"><div class="player-dot">5</div><div class="player-label">Hincapié</div></div>
-        <div class="player team-arsenal" style="left:28%;top:38%"><div class="player-dot">38</div><div class="player-label">Zubimendi</div></div>
-        <div class="player captain team-arsenal" style="left:28%;top:62%"><div class="player-dot">41</div><div class="player-label">Rice</div></div>
-        <div class="player team-arsenal" style="left:38%;top:18%"><div class="player-dot">20</div><div class="player-label">Madueke</div></div>
-        <div class="player team-arsenal" style="left:38%;top:50%"><div class="player-dot">10</div><div class="player-label">Eze</div></div>
-        <div class="player team-arsenal" style="left:38%;top:82%"><div class="player-dot">11</div><div class="player-label">Martinelli</div></div>
-        <div class="player team-arsenal" style="left:46%;top:50%"><div class="player-dot">14</div><div class="player-label">Gyökeres</div></div>
-        <!-- SPORTING -->
-        <div class="player team-sporting" style="left:54%;top:50%"><div class="player-dot">97</div><div class="player-label">L. Suárez</div></div>
-        <div class="player team-sporting" style="left:63%;top:20%"><div class="player-dot">8</div><div class="player-label">Gonçalves</div></div>
-        <div class="player team-sporting" style="left:63%;top:50%"><div class="player-dot">17</div><div class="player-label">Trincão</div></div>
-        <div class="player team-sporting" style="left:63%;top:80%"><div class="player-dot">10</div><div class="player-label">Catamo</div></div>
-        <div class="player team-sporting" style="left:73%;top:38%"><div class="player-dot">5</div><div class="player-label">Morita</div></div>
-        <div class="player captain team-sporting" style="left:73%;top:62%"><div class="player-dot">42</div><div class="player-label">Hjulmand</div></div>
-        <div class="player team-sporting" style="left:84%;top:15%"><div class="player-dot">20</div><div class="player-label">Araújo</div></div>
-        <div class="player team-sporting" style="left:84%;top:38%"><div class="player-dot">25</div><div class="player-label">Inácio</div></div>
-        <div class="player team-sporting" style="left:84%;top:62%"><div class="player-dot">28</div><div class="player-label">Diomande</div></div>
-        <div class="player team-sporting" style="left:84%;top:85%"><div class="player-dot">72</div><div class="player-label">Quaresma</div></div>
-        <div class="player gk team-sporting" style="left:95%;top:50%"><div class="player-dot">1</div><div class="player-label">R. Silva</div></div>
+      <div class="bet-row">
+        <div class="bet-label">Handicap</div>
+        <div class="bet-controls">
+          <button class="pick-btn" data-field="hc-pick" data-value="DET">Pistons</button>
+          <input type="number" step="0.5" class="line-input" data-field="hc-line" placeholder="±">
+          <button class="pick-btn" data-field="hc-pick" data-value="ORL">Magic</button>
+        </div>
       </div>
     </div>
-  </div>
+  </article>
 
-  <div class="stats-wrapper">
-    <!-- ARSENAL STATS -->
-    <div class="stats-panel">
-      <div class="stats-panel-header" style="border-color:var(--arsenal);"><div class="dot" style="background:var(--arsenal);"></div>Arsenal — Stats</div>
-      <div class="stats-section"><div class="stats-section-title">Running Performance (per match)</div><div class="stat-row"><span class="label">Distance covered</span><span class="value">104.3 km</span></div><div class="stat-row"><span class="label">Number of sprints</span><span class="value">92.3</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Attacking</div><div class="stat-row"><span class="label">Goals per game</span><span class="value">2.3</span></div><div class="stat-row"><span class="label">Penalty goals</span><span class="value">2/2</span></div><div class="stat-row"><span class="label">Free kick goals</span><span class="value">0/1</span></div><div class="stat-row"><span class="label">Goals from inside the box</span><span class="value">21/137</span></div><div class="stat-row"><span class="label">Goals from outside the box</span><span class="value">6/48</span></div><div class="stat-row"><span class="label">Left-footed goals</span><span class="value">10</span></div><div class="stat-row"><span class="label">Right-footed goals</span><span class="value">11</span></div><div class="stat-row"><span class="label">Headed goals</span><span class="value">5</span></div><div class="stat-row"><span class="label">Big chances per game</span><span class="value">4.2</span></div><div class="stat-row"><span class="label">Big chances missed per game</span><span class="value">2.8</span></div><div class="stat-row"><span class="label">Total shots per game</span><span class="value">15.4</span></div><div class="stat-row"><span class="label">Shots on target per game</span><span class="value">6.8</span></div><div class="stat-row"><span class="label">Shots off target per game</span><span class="value">5.4</span></div><div class="stat-row"><span class="label">Blocked shots per game</span><span class="value">3.2</span></div><div class="stat-row"><span class="label">Succ. dribbles per game</span><span class="value">7.7</span></div><div class="stat-row"><span class="label">Corners per game</span><span class="value">5.8</span></div><div class="stat-row"><span class="label">Free kicks per game</span><span class="value">11.8</span></div><div class="stat-row"><span class="label">Hit woodwork</span><span class="value">8</span></div><div class="stat-row"><span class="label">Counter attacks</span><span class="value">13</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Passes</div><div class="stat-row"><span class="label">Ball possession</span><span class="value">53.4%</span></div><div class="stat-row"><span class="label">Accurate passes</span><span class="value">388 (85.6%)</span></div><div class="stat-row"><span class="label">Acc. own half</span><span class="value">183 (93.2%)</span></div><div class="stat-row"><span class="label">Acc. opposition half</span><span class="value">205 (79.8%)</span></div><div class="stat-row"><span class="label">Acc. long balls</span><span class="value">13.3 (54.6%)</span></div><div class="stat-row"><span class="label">Acc. crosses</span><span class="value">4.4 (25%)</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Defending</div><div class="stat-row"><span class="label">Clean sheets</span><span class="value">7</span></div><div class="stat-row"><span class="label">Goals conceded per game</span><span class="value">0.4</span></div><div class="stat-row"><span class="label">Tackles per game</span><span class="value">12.6</span></div><div class="stat-row"><span class="label">Interceptions per game</span><span class="value">7.7</span></div><div class="stat-row"><span class="label">Clearances per game</span><span class="value">16.8</span></div><div class="stat-row"><span class="label">Saves per game</span><span class="value">2.3</span></div><div class="stat-row"><span class="label">Balls recovered per game</span><span class="value">42.9</span></div><div class="stat-row"><span class="label">Errors leading to shot</span><span class="value">5</span></div><div class="stat-row"><span class="label">Errors leading to goal</span><span class="value">0</span></div><div class="stat-row"><span class="label">Penalties committed</span><span class="value">1</span></div><div class="stat-row"><span class="label">Penalty goals conceded</span><span class="value">1</span></div><div class="stat-row"><span class="label">Clearance off line</span><span class="value">0</span></div><div class="stat-row"><span class="label">Last man tackle</span><span class="value">2</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Other</div><div class="stat-row"><span class="label">Duels won per game</span><span class="value">45.8 (51%)</span></div><div class="stat-row"><span class="label">Ground duels won</span><span class="value">32 (49.5%)</span></div><div class="stat-row"><span class="label">Aerial duels won</span><span class="value">13.8 (55%)</span></div><div class="stat-row"><span class="label">Possession lost per game</span><span class="value">114.3</span></div><div class="stat-row"><span class="label">Throw-ins per game</span><span class="value">16.5</span></div><div class="stat-row"><span class="label">Goal kicks per game</span><span class="value">5.6</span></div><div class="stat-row"><span class="label">Offsides per game</span><span class="value">1.4</span></div><div class="stat-row"><span class="label">Fouls per game</span><span class="value">11.8</span></div><div class="stat-row"><span class="label">Yellow cards per game</span><span class="value">1.8</span></div><div class="stat-row"><span class="label">Red cards</span><span class="value">0</span></div></div>
-      <div class="stats-panel-footer" style="background:var(--arsenal);"></div>
+  <!-- GAME 2: Thunder vs Suns -->
+  <article class="game" data-game="g2">
+    <div class="game-header">
+      <span class="game-tag">West · First Round · G2</span>
+      <span class="game-time">Apr 22 · Oklahoma City</span>
     </div>
 
-    <!-- SPORTING STATS -->
-    <div class="stats-panel">
-      <div class="stats-panel-header" style="border-color:var(--sporting);"><div class="dot" style="background:var(--sporting);"></div>Sporting CP — Stats</div>
-      <div class="stats-section"><div class="stats-section-title">Running Performance (per match)</div><div class="stat-row"><span class="label">Distance covered</span><span class="value">107 km</span></div><div class="stat-row"><span class="label">Number of sprints</span><span class="value">108</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Attacking</div><div class="stat-row"><span class="label">Goals per game</span><span class="value">1.8</span></div><div class="stat-row"><span class="label">Penalty goals</span><span class="value">2/3</span></div><div class="stat-row"><span class="label">Free kick goals</span><span class="value">0/2</span></div><div class="stat-row"><span class="label">Goals from inside the box</span><span class="value">19/106</span></div><div class="stat-row"><span class="label">Goals from outside the box</span><span class="value">2/49</span></div><div class="stat-row"><span class="label">Left-footed goals</span><span class="value">9</span></div><div class="stat-row"><span class="label">Right-footed goals</span><span class="value">9</span></div><div class="stat-row"><span class="label">Headed goals</span><span class="value">3</span></div><div class="stat-row"><span class="label">Big chances per game</span><span class="value">2.4</span></div><div class="stat-row"><span class="label">Big chances missed per game</span><span class="value">1.5</span></div><div class="stat-row"><span class="label">Total shots per game</span><span class="value">12.9</span></div><div class="stat-row"><span class="label">Shots on target per game</span><span class="value">5.1</span></div><div class="stat-row"><span class="label">Shots off target per game</span><span class="value">4.8</span></div><div class="stat-row"><span class="label">Blocked shots per game</span><span class="value">3.1</span></div><div class="stat-row"><span class="label">Succ. dribbles per game</span><span class="value">8.3</span></div><div class="stat-row"><span class="label">Corners per game</span><span class="value">4.6</span></div><div class="stat-row"><span class="label">Free kicks per game</span><span class="value">12.1</span></div><div class="stat-row"><span class="label">Hit woodwork</span><span class="value">8</span></div><div class="stat-row"><span class="label">Counter attacks</span><span class="value">18</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Passes</div><div class="stat-row"><span class="label">Ball possession</span><span class="value">50.1%</span></div><div class="stat-row"><span class="label">Accurate passes</span><span class="value">424 (86.6%)</span></div><div class="stat-row"><span class="label">Acc. own half</span><span class="value">243 (91.4%)</span></div><div class="stat-row"><span class="label">Acc. opposition half</span><span class="value">181 (80.9%)</span></div><div class="stat-row"><span class="label">Acc. long balls</span><span class="value">16.4 (54.6%)</span></div><div class="stat-row"><span class="label">Acc. crosses</span><span class="value">3.2 (23.6%)</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Defending</div><div class="stat-row"><span class="label">Clean sheets</span><span class="value">2</span></div><div class="stat-row"><span class="label">Goals conceded per game</span><span class="value">1.3</span></div><div class="stat-row"><span class="label">Tackles per game</span><span class="value">16.8</span></div><div class="stat-row"><span class="label">Interceptions per game</span><span class="value">9.3</span></div><div class="stat-row"><span class="label">Clearances per game</span><span class="value">20</span></div><div class="stat-row"><span class="label">Saves per game</span><span class="value">3</span></div><div class="stat-row"><span class="label">Balls recovered per game</span><span class="value">47.3</span></div><div class="stat-row"><span class="label">Errors leading to shot</span><span class="value">15</span></div><div class="stat-row"><span class="label">Errors leading to goal</span><span class="value">2</span></div><div class="stat-row"><span class="label">Penalties committed</span><span class="value">1</span></div><div class="stat-row"><span class="label">Penalty goals conceded</span><span class="value">1</span></div><div class="stat-row"><span class="label">Clearance off line</span><span class="value">0</span></div><div class="stat-row"><span class="label">Last man tackle</span><span class="value">2</span></div></div>
-      <div class="stats-section"><div class="stats-section-title">Other</div><div class="stat-row"><span class="label">Duels won per game</span><span class="value">47.2 (51%)</span></div><div class="stat-row"><span class="label">Ground duels won</span><span class="value">37 (50.3%)</span></div><div class="stat-row"><span class="label">Aerial duels won</span><span class="value">10.2 (53.7%)</span></div><div class="stat-row"><span class="label">Possession lost per game</span><span class="value">114.9</span></div><div class="stat-row"><span class="label">Throw-ins per game</span><span class="value">13.9</span></div><div class="stat-row"><span class="label">Goal kicks per game</span><span class="value">8.8</span></div><div class="stat-row"><span class="label">Offsides per game</span><span class="value">1.4</span></div><div class="stat-row"><span class="label">Fouls per game</span><span class="value">10.8</span></div><div class="stat-row"><span class="label">Yellow cards per game</span><span class="value">2</span></div><div class="stat-row"><span class="label">Red cards</span><span class="value">0</span></div></div>
-      <div class="stats-panel-footer" style="background:var(--sporting);"></div>
+    <div class="teams">
+      <div class="team" data-team="OKC">
+        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#007ac1"/>
+          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="30" fill="#ef3b24">OKC</text>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#fdbb30" stroke-width="3"/>
+        </svg>
+        <div class="team-name">Thunder</div>
+        <div class="team-loc">Oklahoma City</div>
+      </div>
+
+      <div class="vs">VS</div>
+
+      <div class="team" data-team="PHX">
+        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" fill="#1d1160"/>
+          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="30" fill="#e56020">PHX</text>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#e56020" stroke-width="3"/>
+        </svg>
+        <div class="team-name">Suns</div>
+        <div class="team-loc">Phoenix</div>
+      </div>
     </div>
+
+    <div class="bet-section">
+      <div class="bet-row">
+        <div class="bet-label">Over / Under</div>
+        <div class="bet-controls">
+          <input type="number" step="0.5" class="line-input" data-field="ou-line" placeholder="—">
+          <button class="pick-btn" data-field="ou-pick" data-value="OVER">Over</button>
+          <button class="pick-btn" data-field="ou-pick" data-value="UNDER">Under</button>
+        </div>
+      </div>
+
+      <div class="bet-row">
+        <div class="bet-label">Handicap</div>
+        <div class="bet-controls">
+          <button class="pick-btn" data-field="hc-pick" data-value="OKC">Thunder</button>
+          <input type="number" step="0.5" class="line-input" data-field="hc-line" placeholder="±">
+          <button class="pick-btn" data-field="hc-pick" data-value="PHX">Suns</button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <div class="actions">
+    <button class="reset-btn" id="resetBtn">Alle Picks zurücksetzen</button>
   </div>
+
+  <div class="footer">
+    Coach Jouley <span class="gold-dot">·</span> Predictions <span class="gold-dot">·</span> 2026
+  </div>
+
 </div>
-
-<div class="footer">COACH JOULEY — CL PREDICTIONS 2025/26</div>
 
 <script>
-function switchMatch(idx) {
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-  document.querySelectorAll('.match-view').forEach((v, i) => v.classList.toggle('active', i === idx));
+const STORAGE_KEY = 'coachJouley_NBA_R1G2';
+
+function loadPicks() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e) { return {}; }
 }
+function savePicks(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+
+let picks = loadPicks();
+
+function applyState() {
+  document.querySelectorAll('.game').forEach(game => {
+    const gid = game.dataset.game;
+    const data = picks[gid] || {};
+    game.querySelectorAll('.team').forEach(t => {
+      t.classList.toggle('selected', data.winner === t.dataset.team);
+    });
+    game.querySelectorAll('.line-input').forEach(inp => {
+      const f = inp.dataset.field;
+      inp.value = data[f] ?? '';
+    });
+    game.querySelectorAll('.pick-btn').forEach(btn => {
+      const f = btn.dataset.field;
+      btn.classList.toggle('active', data[f] === btn.dataset.value);
+    });
+  });
+}
+
+document.querySelectorAll('.team').forEach(t => {
+  t.addEventListener('click', () => {
+    const game = t.closest('.game');
+    const gid = game.dataset.game;
+    if (!picks[gid]) picks[gid] = {};
+    picks[gid].winner = picks[gid].winner === t.dataset.team ? null : t.dataset.team;
+    savePicks(picks); applyState();
+  });
+});
+
+document.querySelectorAll('.pick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const game = btn.closest('.game');
+    const gid = game.dataset.game;
+    const f = btn.dataset.field;
+    if (!picks[gid]) picks[gid] = {};
+    picks[gid][f] = picks[gid][f] === btn.dataset.value ? null : btn.dataset.value;
+    savePicks(picks); applyState();
+  });
+});
+
+document.querySelectorAll('.line-input').forEach(inp => {
+  inp.addEventListener('input', () => {
+    const game = inp.closest('.game');
+    const gid = game.dataset.game;
+    const f = inp.dataset.field;
+    if (!picks[gid]) picks[gid] = {};
+    picks[gid][f] = inp.value;
+    savePicks(picks);
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('Wirklich alle Picks zurücksetzen?')) {
+    picks = {};
+    localStorage.removeItem(STORAGE_KEY);
+    applyState();
+  }
+});
+
+applyState();
 </script>
 </body>
 </html>
