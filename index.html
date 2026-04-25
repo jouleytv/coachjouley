@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coach Jouley Predictions — NBA Playoffs</title>
+<title>Coach Jouley Predictions · NBA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,416 +16,517 @@
     --gold: #f5c542;
     --gold-glow: rgba(245,197,66,0.18);
     --gold-border: rgba(245,197,66,0.55);
-    --gold-soft: rgba(245,197,66,0.08);
-    --text: #e8e8e8;
-    --text-dim: #777;
+    --gold-soft: rgba(245,197,66,0.10);
+    --over-green: #4ade80;
+    --under-red: #f87171;
+    --text: #ececec;
+    --text-dim: #6a6a6a;
     --text-muted: #3a3a3a;
-    --input-bg: rgba(255,255,255,0.02);
-    --input-border: rgba(255,255,255,0.08);
   }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { background: var(--bg); }
+
   body {
-    background: var(--bg); color: var(--text);
+    color: var(--text);
     font-family: 'JetBrains Mono', monospace;
-    min-height: 100vh; overflow-x: hidden; position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
   }
+
+  /* Grain overlay */
   body::before {
-    content: ''; position: fixed; inset: 0;
+    content: '';
+    position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none; z-index: 1;
   }
+
+  /* Ambient glow */
   body::after {
-    content: ''; position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
-    width: 800px; height: 600px;
-    background: radial-gradient(ellipse, var(--gold-glow) 0%, transparent 60%);
+    content: '';
+    position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 700px;
+    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 65%);
     pointer-events: none; z-index: 0;
+    filter: blur(60px);
   }
-  .container {
+
+  .wrap {
     position: relative; z-index: 2;
-    max-width: 1100px; margin: 0 auto;
+    max-width: 1100px;
+    margin: 0 auto;
     padding: 60px 24px 80px;
   }
-  .hero { text-align: center; margin-bottom: 60px; }
-  .hero-label {
-    font-size: 11px; letter-spacing: 0.4em;
-    text-transform: uppercase; color: var(--gold);
-    margin-bottom: 18px; opacity: 0.85;
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+    animation: fadeUp 0.8s ease both;
   }
-  .hero h1 {
+
+  .brand-mark {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    border: 1px solid var(--gold-border);
+    border-radius: 999px;
+    background: var(--gold-soft);
+  }
+  .brand-mark::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  h1 {
     font-family: 'Oswald', sans-serif;
-    font-size: clamp(40px, 7vw, 80px);
-    font-weight: 700; letter-spacing: -0.01em;
-    text-transform: uppercase; line-height: 0.95;
+    font-weight: 700;
+    font-size: clamp(40px, 7vw, 78px);
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    text-transform: uppercase;
     margin-bottom: 14px;
   }
-  .hero-sub {
-    font-size: 11px; letter-spacing: 0.25em;
-    color: var(--text-dim); text-transform: uppercase;
+  h1 .accent { color: var(--gold); }
+
+  .sub {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+    text-transform: uppercase;
   }
-  .hero-divider {
-    width: 60px; height: 2px; background: var(--gold);
-    margin: 26px auto 0; opacity: 0.7;
+  .sub .dot { color: var(--gold); margin: 0 10px; }
+
+  /* Game grid */
+  .games {
+    display: grid;
+    gap: 28px;
   }
+
   .game {
     background: var(--card);
     border: 1px solid var(--card-border);
-    border-radius: 4px;
-    margin-bottom: 32px; padding: 32px;
-    transition: border-color 0.2s ease;
-  }
-  .game:hover { border-color: rgba(255,255,255,0.1); }
-  .game-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 28px; padding-bottom: 16px;
-    border-bottom: 1px solid var(--card-border);
-    flex-wrap: wrap; gap: 8px;
-  }
-  .game-tag {
-    font-size: 10px; letter-spacing: 0.3em;
-    color: var(--gold); text-transform: uppercase; font-weight: 600;
-  }
-  .game-time {
-    font-size: 11px; letter-spacing: 0.15em;
-    color: var(--text-dim); text-transform: uppercase;
-  }
-  .teams {
-    display: grid; grid-template-columns: 1fr auto 1fr;
-    gap: 18px; align-items: center; margin-bottom: 36px;
-  }
-  .team {
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+    animation: fadeUp 0.7s ease both;
     position: relative;
-    background: rgba(255,255,255,0.015);
-    border: 1px solid var(--card-border);
-    border-radius: 4px;
-    padding: 28px 16px; cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center; overflow: hidden;
+    overflow: hidden;
   }
-  .team::after {
-    content: ''; position: absolute; inset: 0;
-    background: var(--gold-soft);
-    opacity: 0; transition: opacity 0.2s ease;
-    pointer-events: none;
-  }
-  .team:hover {
-    border-color: rgba(245,197,66,0.25);
+  .game:nth-child(1) { animation-delay: 0.1s; }
+  .game:nth-child(2) { animation-delay: 0.2s; }
+  .game:nth-child(3) { animation-delay: 0.3s; }
+  .game:nth-child(4) { animation-delay: 0.4s; }
+
+  .game:hover {
     background: var(--card-hover);
+    border-color: rgba(255,255,255,0.1);
   }
+
+  .game-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px; letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed rgba(255,255,255,0.05);
+  }
+  .series { color: var(--gold); }
+  .tipoff { color: var(--text); font-weight: 500; }
+
+  /* Teams */
+  .teams {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+
+  .team {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px;
+    padding: 22px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .team:hover { background: rgba(255,255,255,0.03); }
+
   .team.selected {
+    background: var(--gold-soft);
     border-color: var(--gold-border);
-    box-shadow: 0 0 0 1px var(--gold-border), 0 0 24px var(--gold-glow);
+    box-shadow: 0 0 32px -8px var(--gold-glow);
   }
-  .team.selected::after { opacity: 1; }
-  .team-logo {
-    width: 80px; height: 80px;
-    margin: 0 auto 14px; object-fit: contain;
-    position: relative; z-index: 1;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  .team.selected::after {
+    content: '★ PICK';
+    position: absolute; top: 8px; right: 10px;
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--gold); font-weight: 700;
   }
+
+  .logo {
+    width: 72px; height: 72px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.25s ease;
+  }
+  .team:hover .logo { transform: scale(1.06); }
+  .logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
   .team-name {
     font-family: 'Oswald', sans-serif;
-    font-size: 18px; text-transform: uppercase;
-    letter-spacing: 0.05em; font-weight: 600;
-    position: relative; z-index: 1;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
   }
   .team-loc {
-    font-size: 10px; color: var(--text-dim);
-    letter-spacing: 0.2em; text-transform: uppercase;
-    margin-top: 4px; position: relative; z-index: 1;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
   }
+
   .vs {
     font-family: 'Oswald', sans-serif;
-    font-size: 18px; color: var(--gold);
-    font-weight: 700; letter-spacing: 0.1em; padding: 0 4px;
+    font-size: 22px; font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
   }
-  .bet-section { display: grid; gap: 16px; }
+
+  /* Bet sections */
   .bet-row {
-    display: grid; grid-template-columns: 130px 1fr;
-    align-items: center; gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
   }
+
+  .bet-section {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
   .bet-label {
-    font-size: 10px; letter-spacing: 0.25em;
-    color: var(--text-dim); text-transform: uppercase; font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .bet-controls {
-    display: flex; gap: 8px;
-    align-items: center; flex-wrap: wrap;
+  .bet-label::before {
+    content: ''; width: 4px; height: 4px; background: var(--gold); border-radius: 50%;
   }
+
   .line-input {
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
     color: var(--text);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; padding: 10px 12px;
-    border-radius: 3px; width: 90px;
-    text-align: center;
-    transition: all 0.15s ease;
-    -moz-appearance: textfield;
-  }
-  .line-input::-webkit-outer-spin-button,
-  .line-input::-webkit-inner-spin-button {
-    -webkit-appearance: none; margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s ease;
   }
   .line-input:focus {
     outline: none;
     border-color: var(--gold-border);
-    background: rgba(245,197,66,0.04);
   }
   .line-input::placeholder { color: var(--text-muted); }
+
+  .pick-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
   .pick-btn {
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
     color: var(--text-dim);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 10px 16px; border-radius: 3px;
-    cursor: pointer; transition: all 0.15s ease;
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
     font-weight: 600;
+    letter-spacing: 0.15em;
+    padding: 10px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
   }
   .pick-btn:hover {
-    border-color: rgba(245,197,66,0.3);
+    border-color: rgba(255,255,255,0.2);
     color: var(--text);
   }
   .pick-btn.active {
     background: var(--gold-soft);
     border-color: var(--gold-border);
     color: var(--gold);
-    box-shadow: 0 0 16px var(--gold-glow);
+    box-shadow: 0 0 18px -6px var(--gold-glow);
   }
-  .actions {
-    display: flex; justify-content: center;
-    gap: 14px; margin-top: 50px;
+
+  /* Reset */
+  .reset-row {
+    text-align: center;
+    margin-top: 48px;
   }
   .reset-btn {
     background: transparent;
-    border: 1px solid var(--card-border);
+    border: 1px solid rgba(255,255,255,0.1);
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 0.3em;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    padding: 12px 28px;
+    border-radius: 999px;
+    cursor: pointer;
     text-transform: uppercase;
-    padding: 12px 24px; border-radius: 3px;
-    cursor: pointer; transition: all 0.15s ease;
+    transition: all 0.2s ease;
   }
   .reset-btn:hover {
-    border-color: rgba(245,80,80,0.4);
-    color: #f87171;
+    border-color: var(--gold-border);
+    color: var(--gold);
   }
-  .footer {
-    text-align: center; margin-top: 60px;
-    font-size: 10px; letter-spacing: 0.25em;
-    color: var(--text-muted); text-transform: uppercase;
+
+  footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
   }
-  .footer .gold-dot { color: var(--gold); margin: 0 8px; }
-  @media (max-width: 600px) {
-    .container { padding: 40px 16px 60px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 40px 16px 60px; }
     .game { padding: 22px 18px; }
-    .teams { gap: 10px; }
-    .team { padding: 20px 8px; }
-    .team-logo { width: 60px; height: 60px; }
-    .team-name { font-size: 14px; }
-    .vs { font-size: 14px; }
-    .bet-row { grid-template-columns: 1fr; gap: 8px; }
-    .bet-label { font-size: 9px; }
-    .pick-btn { font-size: 10px; padding: 9px 12px; }
-    .line-input { width: 80px; font-size: 12px; }
+    .teams { gap: 8px; }
+    .logo { width: 58px; height: 58px; }
+    .team-name { font-size: 15px; }
+    .bet-row { grid-template-columns: 1fr; }
+    .game-meta { font-size: 9px; flex-direction: column; gap: 6px; align-items: flex-start; }
   }
 </style>
 </head>
 <body>
-<div class="container">
+  <div class="wrap">
+    <header>
+      <div class="brand-mark">Live · NBA Playoffs</div>
+      <h1>Coach Jouley<br><span class="accent">Predictions</span></h1>
+      <div class="sub">Saturday Apr 26 <span class="dot">●</span> 4 Games <span class="dot">●</span> First Round</div>
+    </header>
 
-  <header class="hero">
-    <div class="hero-label">Coach Jouley</div>
-    <h1>Predictions</h1>
-    <div class="hero-sub">NBA Playoffs · Round 1 · Game 2</div>
-    <div class="hero-divider"></div>
-  </header>
+    <div class="games" id="games"></div>
 
-  <!-- GAME 1: Pistons vs Magic -->
-  <article class="game" data-game="g1">
-    <div class="game-header">
-      <span class="game-tag">East · First Round · G2</span>
-      <span class="game-time">Apr 22 · Detroit</span>
+    <div class="reset-row">
+      <button class="reset-btn" id="resetBtn">↻ Reset all picks</button>
     </div>
 
-    <div class="teams">
-      <div class="team" data-team="DET">
-        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="#1d428a"/>
-          <circle cx="50" cy="50" r="38" fill="#c8102e"/>
-          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="32" fill="#fff">DET</text>
-        </svg>
-        <div class="team-name">Pistons</div>
-        <div class="team-loc">Detroit</div>
-      </div>
-
-      <div class="vs">VS</div>
-
-      <div class="team" data-team="ORL">
-        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="#0077c0"/>
-          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="32" fill="#c4ced4">ORL</text>
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2"/>
-        </svg>
-        <div class="team-name">Magic</div>
-        <div class="team-loc">Orlando</div>
-      </div>
-    </div>
-
-    <div class="bet-section">
-      <div class="bet-row">
-        <div class="bet-label">Over / Under</div>
-        <div class="bet-controls">
-          <input type="number" step="0.5" class="line-input" data-field="ou-line" placeholder="—">
-          <button class="pick-btn" data-field="ou-pick" data-value="OVER">Over</button>
-          <button class="pick-btn" data-field="ou-pick" data-value="UNDER">Under</button>
-        </div>
-      </div>
-
-      <div class="bet-row">
-        <div class="bet-label">Handicap</div>
-        <div class="bet-controls">
-          <button class="pick-btn" data-field="hc-pick" data-value="DET">Pistons</button>
-          <input type="number" step="0.5" class="line-input" data-field="hc-line" placeholder="±">
-          <button class="pick-btn" data-field="hc-pick" data-value="ORL">Magic</button>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <!-- GAME 2: Thunder vs Suns -->
-  <article class="game" data-game="g2">
-    <div class="game-header">
-      <span class="game-tag">West · First Round · G2</span>
-      <span class="game-time">Apr 22 · Oklahoma City</span>
-    </div>
-
-    <div class="teams">
-      <div class="team" data-team="OKC">
-        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="#007ac1"/>
-          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="30" fill="#ef3b24">OKC</text>
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#fdbb30" stroke-width="3"/>
-        </svg>
-        <div class="team-name">Thunder</div>
-        <div class="team-loc">Oklahoma City</div>
-      </div>
-
-      <div class="vs">VS</div>
-
-      <div class="team" data-team="PHX">
-        <svg class="team-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="#1d1160"/>
-          <text x="50" y="62" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="30" fill="#e56020">PHX</text>
-          <circle cx="50" cy="50" r="45" fill="none" stroke="#e56020" stroke-width="3"/>
-        </svg>
-        <div class="team-name">Suns</div>
-        <div class="team-loc">Phoenix</div>
-      </div>
-    </div>
-
-    <div class="bet-section">
-      <div class="bet-row">
-        <div class="bet-label">Over / Under</div>
-        <div class="bet-controls">
-          <input type="number" step="0.5" class="line-input" data-field="ou-line" placeholder="—">
-          <button class="pick-btn" data-field="ou-pick" data-value="OVER">Over</button>
-          <button class="pick-btn" data-field="ou-pick" data-value="UNDER">Under</button>
-        </div>
-      </div>
-
-      <div class="bet-row">
-        <div class="bet-label">Handicap</div>
-        <div class="bet-controls">
-          <button class="pick-btn" data-field="hc-pick" data-value="OKC">Thunder</button>
-          <input type="number" step="0.5" class="line-input" data-field="hc-line" placeholder="±">
-          <button class="pick-btn" data-field="hc-pick" data-value="PHX">Suns</button>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <div class="actions">
-    <button class="reset-btn" id="resetBtn">Alle Picks zurücksetzen</button>
+    <footer>Coach Jouley · 2026 NBA Playoffs</footer>
   </div>
-
-  <div class="footer">
-    Coach Jouley <span class="gold-dot">·</span> Predictions <span class="gold-dot">·</span> 2026
-  </div>
-
-</div>
 
 <script>
-const STORAGE_KEY = 'coachJouley_NBA_R1G2';
+  const GAMES = [
+    {
+      id: 'orl-det-g3',
+      series: 'East · ORL leads 1-1 · Game 3',
+      tipoff: '19:00 CEST',
+      home: { code: 'ORL', name: 'Magic', loc: 'Orlando' },
+      away: { code: 'DET', name: 'Pistons', loc: 'Detroit' }
+    },
+    {
+      id: 'phx-okc-g3',
+      series: 'West · OKC leads 2-0 · Game 3',
+      tipoff: '21:30 CEST',
+      home: { code: 'PHX', name: 'Suns', loc: 'Phoenix' },
+      away: { code: 'OKC', name: 'Thunder', loc: 'Oklahoma City' }
+    },
+    {
+      id: 'atl-nyk-g4',
+      series: 'East · ATL leads 2-1 · Game 4',
+      tipoff: '00:00 CEST',
+      home: { code: 'ATL', name: 'Hawks', loc: 'Atlanta' },
+      away: { code: 'NYK', name: 'Knicks', loc: 'New York' }
+    },
+    {
+      id: 'min-den-g4',
+      series: 'West · MIN leads 2-1 · Game 4',
+      tipoff: '02:30 CEST',
+      home: { code: 'MIN', name: 'Timberwolves', loc: 'Minnesota' },
+      away: { code: 'DEN', name: 'Nuggets', loc: 'Denver' }
+    }
+  ];
 
-function loadPicks() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch(e) { return {}; }
-}
-function savePicks(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+  const LOGO = {
+    ATL: 'https://a.espncdn.com/i/teamlogos/nba/500/atl.png',
+    BOS: 'https://a.espncdn.com/i/teamlogos/nba/500/bos.png',
+    BKN: 'https://a.espncdn.com/i/teamlogos/nba/500/bkn.png',
+    CHA: 'https://a.espncdn.com/i/teamlogos/nba/500/cha.png',
+    CHI: 'https://a.espncdn.com/i/teamlogos/nba/500/chi.png',
+    CLE: 'https://a.espncdn.com/i/teamlogos/nba/500/cle.png',
+    DAL: 'https://a.espncdn.com/i/teamlogos/nba/500/dal.png',
+    DEN: 'https://a.espncdn.com/i/teamlogos/nba/500/den.png',
+    DET: 'https://a.espncdn.com/i/teamlogos/nba/500/det.png',
+    GSW: 'https://a.espncdn.com/i/teamlogos/nba/500/gs.png',
+    HOU: 'https://a.espncdn.com/i/teamlogos/nba/500/hou.png',
+    IND: 'https://a.espncdn.com/i/teamlogos/nba/500/ind.png',
+    LAC: 'https://a.espncdn.com/i/teamlogos/nba/500/lac.png',
+    LAL: 'https://a.espncdn.com/i/teamlogos/nba/500/lal.png',
+    MEM: 'https://a.espncdn.com/i/teamlogos/nba/500/mem.png',
+    MIA: 'https://a.espncdn.com/i/teamlogos/nba/500/mia.png',
+    MIL: 'https://a.espncdn.com/i/teamlogos/nba/500/mil.png',
+    MIN: 'https://a.espncdn.com/i/teamlogos/nba/500/min.png',
+    NOP: 'https://a.espncdn.com/i/teamlogos/nba/500/no.png',
+    NYK: 'https://a.espncdn.com/i/teamlogos/nba/500/ny.png',
+    OKC: 'https://a.espncdn.com/i/teamlogos/nba/500/okc.png',
+    ORL: 'https://a.espncdn.com/i/teamlogos/nba/500/orl.png',
+    PHI: 'https://a.espncdn.com/i/teamlogos/nba/500/phi.png',
+    PHX: 'https://a.espncdn.com/i/teamlogos/nba/500/phx.png',
+    POR: 'https://a.espncdn.com/i/teamlogos/nba/500/por.png',
+    SAC: 'https://a.espncdn.com/i/teamlogos/nba/500/sac.png',
+    SAS: 'https://a.espncdn.com/i/teamlogos/nba/500/sa.png',
+    TOR: 'https://a.espncdn.com/i/teamlogos/nba/500/tor.png',
+    UTA: 'https://a.espncdn.com/i/teamlogos/nba/500/utah.png',
+    WAS: 'https://a.espncdn.com/i/teamlogos/nba/500/wsh.png'
+  };
 
-let picks = loadPicks();
+  const STORAGE_KEY = 'coachJouleyNBAPicks_2026_04_25';
+  let picks = {};
+  try { picks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { picks = {}; }
+  function savePicks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(picks)); }
 
-function applyState() {
-  document.querySelectorAll('.game').forEach(game => {
-    const gid = game.dataset.game;
-    const data = picks[gid] || {};
-    game.querySelectorAll('.team').forEach(t => {
-      t.classList.toggle('selected', data.winner === t.dataset.team);
+  const container = document.getElementById('games');
+
+  GAMES.forEach(g => {
+    const card = document.createElement('div');
+    card.className = 'game';
+    card.dataset.game = g.id;
+    card.innerHTML = `
+      <div class="game-meta">
+        <span class="series">${g.series}</span>
+        <span class="tipoff">${g.tipoff}</span>
+      </div>
+      <div class="teams">
+        <div class="team" data-team="${g.away.code}">
+          <div class="logo"><img src="${LOGO[g.away.code]}" alt="${g.away.name}"></div>
+          <div class="team-name">${g.away.name}</div>
+          <div class="team-loc">${g.away.loc} · Away</div>
+        </div>
+        <div class="vs">@</div>
+        <div class="team" data-team="${g.home.code}">
+          <div class="logo"><img src="${LOGO[g.home.code]}" alt="${g.home.name}"></div>
+          <div class="team-name">${g.home.name}</div>
+          <div class="team-loc">${g.home.loc} · Home</div>
+        </div>
+      </div>
+      <div class="bet-row">
+        <div class="bet-section">
+          <div class="bet-label">Over / Under</div>
+          <input class="line-input" type="text" inputmode="decimal" placeholder="z.B. 215.5" data-field="ouLine">
+          <div class="pick-btns">
+            <button class="pick-btn" data-field="ou" data-value="over">Over ↑</button>
+            <button class="pick-btn" data-field="ou" data-value="under">Under ↓</button>
+          </div>
+        </div>
+        <div class="bet-section">
+          <div class="bet-label">Handicap</div>
+          <input class="line-input" type="text" inputmode="text" placeholder="z.B. -4.5 / +4.5" data-field="hcpLine">
+          <div class="pick-btns">
+            <button class="pick-btn" data-field="hcp" data-value="${g.away.code}">${g.away.code}</button>
+            <button class="pick-btn" data-field="hcp" data-value="${g.home.code}">${g.home.code}</button>
+          </div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  function applyState() {
+    document.querySelectorAll('.game').forEach(card => {
+      const gid = card.dataset.game;
+      const data = picks[gid] || {};
+      card.querySelectorAll('.team').forEach(t => {
+        t.classList.toggle('selected', data.winner === t.dataset.team);
+      });
+      card.querySelectorAll('.line-input').forEach(inp => {
+        inp.value = data[inp.dataset.field] || '';
+      });
+      card.querySelectorAll('.pick-btn').forEach(btn => {
+        btn.classList.toggle('active', data[btn.dataset.field] === btn.dataset.value);
+      });
     });
-    game.querySelectorAll('.line-input').forEach(inp => {
-      const f = inp.dataset.field;
-      inp.value = data[f] ?? '';
-    });
-    game.querySelectorAll('.pick-btn').forEach(btn => {
-      const f = btn.dataset.field;
-      btn.classList.toggle('active', data[f] === btn.dataset.value);
-    });
-  });
-}
-
-document.querySelectorAll('.team').forEach(t => {
-  t.addEventListener('click', () => {
-    const game = t.closest('.game');
-    const gid = game.dataset.game;
-    if (!picks[gid]) picks[gid] = {};
-    picks[gid].winner = picks[gid].winner === t.dataset.team ? null : t.dataset.team;
-    savePicks(picks); applyState();
-  });
-});
-
-document.querySelectorAll('.pick-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const game = btn.closest('.game');
-    const gid = game.dataset.game;
-    const f = btn.dataset.field;
-    if (!picks[gid]) picks[gid] = {};
-    picks[gid][f] = picks[gid][f] === btn.dataset.value ? null : btn.dataset.value;
-    savePicks(picks); applyState();
-  });
-});
-
-document.querySelectorAll('.line-input').forEach(inp => {
-  inp.addEventListener('input', () => {
-    const game = inp.closest('.game');
-    const gid = game.dataset.game;
-    const f = inp.dataset.field;
-    if (!picks[gid]) picks[gid] = {};
-    picks[gid][f] = inp.value;
-    savePicks(picks);
-  });
-});
-
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (confirm('Wirklich alle Picks zurücksetzen?')) {
-    picks = {};
-    localStorage.removeItem(STORAGE_KEY);
-    applyState();
   }
-});
 
-applyState();
+  document.querySelectorAll('.team').forEach(t => {
+    t.addEventListener('click', () => {
+      const card = t.closest('.game');
+      const gid = card.dataset.game;
+      if (!picks[gid]) picks[gid] = {};
+      picks[gid].winner = picks[gid].winner === t.dataset.team ? null : t.dataset.team;
+      savePicks(); applyState();
+    });
+  });
+
+  document.querySelectorAll('.pick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.game');
+      const gid = card.dataset.game;
+      const f = btn.dataset.field;
+      if (!picks[gid]) picks[gid] = {};
+      picks[gid][f] = picks[gid][f] === btn.dataset.value ? null : btn.dataset.value;
+      savePicks(); applyState();
+    });
+  });
+
+  document.querySelectorAll('.line-input').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const card = inp.closest('.game');
+      const gid = card.dataset.game;
+      if (!picks[gid]) picks[gid] = {};
+      picks[gid][inp.dataset.field] = inp.value;
+      savePicks();
+    });
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Wirklich alle Picks zurücksetzen?')) {
+      picks = {};
+      localStorage.removeItem(STORAGE_KEY);
+      applyState();
+    }
+  });
+
+  applyState();
 </script>
 </body>
 </html>
