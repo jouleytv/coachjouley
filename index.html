@@ -344,8 +344,10 @@
   /* PLAYER PROPS */
   .players-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: 1fr;
     gap: 18px;
+    max-width: 600px;
+    margin: 0 auto;
   }
   .player-card {
     background: var(--card);
@@ -565,8 +567,8 @@
     </div>
   </div>
 
-  <!-- GAMES -->
-  <div class="section-title">Games · Series Picks</div>
+  <!-- GAME 7 -->
+  <div class="section-title">Game 7 · Winner Take All</div>
   <div class="games-grid" id="gamesGrid"></div>
 
   <!-- PLAYER PROPS -->
@@ -596,13 +598,7 @@ const PISTONS_LOGO = 'https://cdn.nba.com/logos/nba/1610612765/global/L/logo.svg
 const PISTONS_FALLBACK = 'https://a.espncdn.com/i/teamlogos/nba/500/det.png';
 
 const GAMES = [
-  { id: 'g1', num: 1, date: 'Apr 19', location: '@ Detroit', result: 'Magic 102, Pistons 96' },
-  { id: 'g2', num: 2, date: 'Apr 21', location: '@ Detroit', result: 'Pistons 100, Magic 84' },
-  { id: 'g3', num: 3, date: 'Apr 25', location: '@ Orlando', result: 'Magic 113, Pistons 105' },
-  { id: 'g4', num: 4, date: 'Apr 27', location: '@ Orlando', result: 'Magic 99, Pistons 88' },
-  { id: 'g5', num: 5, date: 'Apr 29', location: '@ Detroit', result: 'Pistons 124, Magic 118' },
-  { id: 'g6', num: 6, date: 'May 1',  location: '@ Orlando', result: 'Pistons 110, Magic 108' },
-  { id: 'g7', num: 7, date: 'May 3',  location: '@ Detroit', result: 'Pistons 119, Magic 87' }
+  { id: 'g7', num: 7, date: 'May 3', location: '@ Detroit' }
 ];
 
 const PLAYERS = [
@@ -713,7 +709,6 @@ function renderGames() {
         <span class="game-num">GAME ${g.num}</span>
         <span class="game-date">${g.date} · ${g.location}</span>
       </div>
-      <div class="game-result">RESULT: <strong>${g.result}</strong></div>
       <div class="gc-teams">
         <div class="gc-team ${s.pick === 'magic' ? 'selected' : ''}" onclick="pickGameTeam('${g.id}','magic')">
           <img src="${MAGIC_LOGO}" onerror="this.src='${MAGIC_FALLBACK}'" alt="">
