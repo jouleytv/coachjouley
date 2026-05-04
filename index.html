@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coach Jouley Predictions · NBA</title>
+<title>Coach Jouley Predictions · Magic vs Pistons</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -14,29 +13,29 @@
     --card-border: rgba(255,255,255,0.06);
     --card-hover: rgba(255,255,255,0.05);
     --gold: #f5c542;
-    --gold-glow: rgba(245,197,66,0.18);
-    --gold-border: rgba(245,197,66,0.55);
-    --gold-soft: rgba(245,197,66,0.10);
+    --gold-glow: rgba(245,197,66,0.15);
+    --gold-border: rgba(245,197,66,0.5);
+    --gold-soft: rgba(245,197,66,0.08);
     --over-green: #4ade80;
     --under-red: #f87171;
-    --text: #ececec;
-    --text-dim: #6a6a6a;
-    --text-muted: #3a3a3a;
+    --magic-blue: #0077c0;
+    --pistons-red: #c8102e;
+    --text: #e8e8e8;
+    --text-dim: #888;
+    --text-muted: #4a4a4a;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html, body { background: var(--bg); }
-
   body {
+    background: var(--bg);
     color: var(--text);
     font-family: 'JetBrains Mono', monospace;
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative;
+    padding-bottom: 60px;
   }
 
-  /* Grain overlay */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -44,489 +43,825 @@
     pointer-events: none; z-index: 1;
   }
 
-  /* Ambient glow */
   body::after {
     content: '';
     position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
-    width: 900px; height: 700px;
-    background: radial-gradient(circle, var(--gold-glow) 0%, transparent 65%);
+    width: 800px; height: 600px;
+    background: radial-gradient(ellipse, var(--gold-glow) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
-    filter: blur(60px);
   }
 
   .wrap {
-    position: relative; z-index: 2;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 60px 24px 80px;
+    padding: 50px 24px 0;
+    position: relative;
+    z-index: 2;
   }
 
-  /* Header */
+  /* HEADER */
   header {
     text-align: center;
-    margin-bottom: 64px;
-    animation: fadeUp 0.8s ease both;
+    margin-bottom: 60px;
   }
-
-  .brand-mark {
-    display: inline-flex; align-items: center; gap: 10px;
-    font-family: 'JetBrains Mono', monospace;
+  .brand-tag {
     font-size: 11px;
-    font-weight: 500;
     letter-spacing: 0.4em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    padding: 8px 16px;
-    border: 1px solid var(--gold-border);
-    border-radius: 999px;
-    background: var(--gold-soft);
-  }
-  .brand-mark::before {
-    content: ''; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--gold);
-    box-shadow: 0 0 10px var(--gold);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  h1 {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: clamp(40px, 7vw, 78px);
-    letter-spacing: 0.02em;
-    line-height: 0.95;
-    text-transform: uppercase;
+    color: var(--text-dim);
     margin-bottom: 14px;
   }
-  h1 .accent { color: var(--gold); }
-
-  .sub {
-    font-size: 12px;
-    letter-spacing: 0.3em;
-    color: var(--text-dim);
+  h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1;
     text-transform: uppercase;
   }
-  .sub .dot { color: var(--gold); margin: 0 10px; }
+  h1 .gold { color: var(--gold); }
 
-  /* Game grid */
-  .games {
-    display: grid;
-    gap: 28px;
-  }
-
-  .game {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 16px;
-    padding: 28px;
-    transition: border-color 0.25s ease, background 0.25s ease;
-    animation: fadeUp 0.7s ease both;
-    position: relative;
-    overflow: hidden;
-  }
-  .game:nth-child(1) { animation-delay: 0.1s; }
-  .game:nth-child(2) { animation-delay: 0.2s; }
-  .game:nth-child(3) { animation-delay: 0.3s; }
-  .game:nth-child(4) { animation-delay: 0.4s; }
-
-  .game:hover {
-    background: var(--card-hover);
-    border-color: rgba(255,255,255,0.1);
-  }
-
-  .game-meta {
-    display: flex; justify-content: space-between; align-items: center;
-    font-size: 11px; letter-spacing: 0.25em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    padding-bottom: 18px;
-    border-bottom: 1px dashed rgba(255,255,255,0.05);
-  }
-  .series { color: var(--gold); }
-  .tipoff { color: var(--text); font-weight: 500; }
-
-  /* Teams */
-  .teams {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+  .matchup-band {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 18px;
-    margin-bottom: 26px;
+    gap: 28px;
+    flex-wrap: wrap;
   }
-
-  .team {
-    display: flex; flex-direction: column; align-items: center;
+  .team-block {
+    display: flex;
+    align-items: center;
     gap: 14px;
-    padding: 22px 16px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.25s ease;
-    position: relative;
   }
-  .team:hover { background: rgba(255,255,255,0.03); }
-
-  .team.selected {
-    background: var(--gold-soft);
-    border-color: var(--gold-border);
-    box-shadow: 0 0 32px -8px var(--gold-glow);
+  .team-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
   }
-  .team.selected::after {
-    content: '★ PICK';
-    position: absolute; top: 8px; right: 10px;
-    font-size: 9px; letter-spacing: 0.2em;
-    color: var(--gold); font-weight: 700;
-  }
-
-  .logo {
-    width: 72px; height: 72px;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.25s ease;
-  }
-  .team:hover .logo { transform: scale(1.06); }
-  .logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
+  .team-info { text-align: left; }
   .team-name {
     font-family: 'Oswald', sans-serif;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-align: center;
+    letter-spacing: 0.03em;
+    line-height: 1;
   }
-  .team-loc {
+  .team-seed {
     font-size: 10px;
     letter-spacing: 0.2em;
     color: var(--text-dim);
-    text-transform: uppercase;
+    margin-top: 5px;
   }
-
-  .vs {
+  .vs-divider {
     font-family: 'Oswald', sans-serif;
-    font-size: 22px; font-weight: 700;
-    color: var(--text-muted);
-    letter-spacing: 0.1em;
+    font-size: 20px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
   }
 
-  /* Bet sections */
-  .bet-row {
+  .series-tag {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 18px;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    background: var(--card);
+  }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 50px 0 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::before {
+    content: '';
+    width: 6px; height: 18px;
+    background: var(--gold);
+  }
+
+  /* SERIES WINNER */
+  .series-winner-box {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 28px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 18px;
+    gap: 16px;
+  }
+  .winner-pick {
+    padding: 22px;
+    border: 2px solid var(--card-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .winner-pick:hover {
+    background: var(--card-hover);
+    border-color: rgba(245,197,66,0.3);
+  }
+  .winner-pick.selected {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    box-shadow: 0 0 24px var(--gold-glow);
+  }
+  .winner-pick.selected::after {
+    content: '★';
+    position: absolute;
+    top: 8px; right: 12px;
+    color: var(--gold);
+    font-size: 16px;
+  }
+  .winner-pick img { width: 48px; height: 48px; object-fit: contain; }
+  .winner-pick .wp-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
   }
 
-  .bet-section {
-    background: rgba(0,0,0,0.25);
+  /* GAMES GRID */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .game-card {
+    background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 10px;
-    padding: 16px;
+    padding: 20px;
+    transition: all 0.2s;
   }
-
-  .bet-label {
+  .game-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--card-border);
+  }
+  .game-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .game-date {
     font-size: 10px;
-    letter-spacing: 0.28em;
     color: var(--text-dim);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.1em;
   }
-  .bet-label::before {
-    content: ''; width: 4px; height: 4px; background: var(--gold); border-radius: 50%;
-  }
-
-  .line-input {
-    width: 100%;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
+  .game-result {
+    text-align: center;
+    margin-bottom: 14px;
+    font-family: 'Oswald', sans-serif;
     font-size: 14px;
-    font-weight: 500;
-    padding: 10px 12px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    transition: border-color 0.2s ease;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
   }
-  .line-input:focus {
-    outline: none;
-    border-color: var(--gold-border);
-  }
-  .line-input::placeholder { color: var(--text-muted); }
+  .game-result strong { color: var(--text); }
+  .game-result .winner-team { color: var(--gold); }
 
-  .pick-btns {
+  .gc-teams {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
+    margin-bottom: 14px;
   }
-
-  .pick-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.08);
-    color: var(--text-dim);
-    font-family: 'Oswald', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
+  .gc-team {
     padding: 10px 8px;
+    border: 2px solid var(--card-border);
     border-radius: 6px;
     cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.2);
+    position: relative;
   }
-  .pick-btn:hover {
-    border-color: rgba(255,255,255,0.2);
-    color: var(--text);
-  }
-  .pick-btn.active {
+  .gc-team:hover { background: var(--card-hover); }
+  .gc-team.selected {
+    border-color: var(--gold);
     background: var(--gold-soft);
-    border-color: var(--gold-border);
+    box-shadow: 0 0 12px var(--gold-glow);
+  }
+  .gc-team.selected::after {
+    content: '★';
+    position: absolute;
+    top: 4px; right: 6px;
     color: var(--gold);
-    box-shadow: 0 0 18px -6px var(--gold-glow);
+    font-size: 11px;
   }
+  .gc-team img { width: 32px; height: 32px; object-fit: contain; }
+  .gc-team-name {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+  .gc-team.selected .gc-team-name { color: var(--text); }
 
-  /* Reset */
-  .reset-row {
-    text-align: center;
-    margin-top: 48px;
+  /* OVER/UNDER */
+  .ou-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
   }
-  .reset-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.1);
+  .ou-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .ou-row {
+    display: flex;
+    gap: 6px;
+  }
+  .ou-input {
+    flex: 1;
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    width: 100%;
+  }
+  .ou-input:focus { border-color: var(--gold-border); }
+  .ou-btn {
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.3);
+    border: 1.5px solid var(--card-border);
+    border-radius: 6px;
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.3em;
-    padding: 12px 28px;
-    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
+    transition: all 0.15s;
   }
-  .reset-btn:hover {
-    border-color: var(--gold-border);
+  .ou-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+  .ou-btn.over-sel {
+    border-color: var(--gold);
+    background: var(--gold-soft);
     color: var(--gold);
+    box-shadow: 0 0 10px var(--gold-glow);
+  }
+  .ou-btn.under-sel {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold);
+    box-shadow: 0 0 10px var(--gold-glow);
+  }
+
+  /* PLAYER PROPS */
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 18px;
+  }
+  .player-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .player-header {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(0,0,0,0.25);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .player-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--card-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    color: var(--gold);
+    border: 2px solid var(--gold-border);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .player-avatar img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .player-info { flex: 1; min-width: 0; }
+  .player-name {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+  .player-team {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+  .player-team-logo {
+    width: 22px; height: 22px; object-fit: contain;
+  }
+
+  .props-list {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .prop-row {
+    display: grid;
+    grid-template-columns: 70px 1fr auto auto;
+    gap: 6px;
+    align-items: center;
+  }
+  .prop-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .prop-input {
+    padding: 6px 8px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    text-align: center;
+    outline: none;
+    width: 100%;
+  }
+  .prop-input:focus { border-color: var(--gold-border); }
+  .prop-btn {
+    padding: 6px 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1.5px solid var(--card-border);
+    border-radius: 5px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .prop-btn:hover { color: var(--text); }
+  .prop-btn.sel {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold);
+    box-shadow: 0 0 8px var(--gold-glow);
+  }
+
+  /* CUSTOM PLAYERS */
+  .custom-section {
+    background: var(--card);
+    border: 1px dashed var(--card-border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .custom-row {
+    display: grid;
+    grid-template-columns: 1.5fr 80px 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .custom-row input {
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    width: 100%;
+  }
+  .custom-row input:focus { border-color: var(--gold-border); }
+  .custom-row input::placeholder { color: var(--text-muted); font-size: 11px; }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .ctrl-btn {
+    padding: 10px 22px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ctrl-btn:hover {
+    color: var(--gold);
+    border-color: var(--gold-border);
+    background: var(--gold-soft);
   }
 
   footer {
     text-align: center;
-    margin-top: 48px;
+    margin-top: 60px;
+    padding: 30px 0;
     font-size: 10px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     color: var(--text-muted);
-    text-transform: uppercase;
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 640px) {
-    .wrap { padding: 40px 16px 60px; }
-    .game { padding: 22px 18px; }
-    .teams { gap: 8px; }
-    .logo { width: 58px; height: 58px; }
-    .team-name { font-size: 15px; }
-    .bet-row { grid-template-columns: 1fr; }
-    .game-meta { font-size: 9px; flex-direction: column; gap: 6px; align-items: flex-start; }
+  @media (max-width: 600px) {
+    .series-winner-box { grid-template-columns: 1fr; }
+    .matchup-band { gap: 14px; }
+    .team-logo { width: 50px; height: 50px; }
+    .team-name { font-size: 18px; }
+    .custom-row {
+      grid-template-columns: 1fr 80px;
+      grid-template-rows: auto auto;
+    }
+    .custom-row input:nth-child(3) { grid-column: 1 / -1; }
+    .prop-row { grid-template-columns: 60px 1fr auto auto; }
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand-mark">Live · NBA Playoffs</div>
-      <h1>Coach Jouley<br><span class="accent">Predictions</span></h1>
-      <div class="sub">Saturday Apr 26 <span class="dot">●</span> 4 Games <span class="dot">●</span> First Round</div>
-    </header>
+<div class="wrap">
 
-    <div class="games" id="games"></div>
-
-    <div class="reset-row">
-      <button class="reset-btn" id="resetBtn">↻ Reset all picks</button>
+  <header>
+    <div class="brand-tag">★ COACH JOULEY ★ PREDICTIONS ★</div>
+    <h1>Magic <span class="gold">vs</span> Pistons</h1>
+    <div class="matchup-band">
+      <div class="team-block">
+        <img class="team-logo" src="https://cdn.nba.com/logos/nba/1610612753/global/L/logo.svg" alt="Magic" onerror="this.src='https://a.espncdn.com/i/teamlogos/nba/500/orl.png'">
+        <div class="team-info">
+          <div class="team-name">Orlando Magic</div>
+          <div class="team-seed">#8 SEED · EAST</div>
+        </div>
+      </div>
+      <div class="vs-divider">VS</div>
+      <div class="team-block">
+        <img class="team-logo" src="https://cdn.nba.com/logos/nba/1610612765/global/L/logo.svg" alt="Pistons" onerror="this.src='https://a.espncdn.com/i/teamlogos/nba/500/det.png'">
+        <div class="team-info">
+          <div class="team-name">Detroit Pistons</div>
+          <div class="team-seed">#1 SEED · EAST</div>
+        </div>
+      </div>
     </div>
+    <div class="series-tag">FIRST ROUND · BEST OF 7 · 2026 PLAYOFFS</div>
+  </header>
 
-    <footer>Coach Jouley · 2026 NBA Playoffs</footer>
+  <!-- SERIES WINNER -->
+  <div class="section-title">Series Winner</div>
+  <div class="series-winner-box">
+    <div class="winner-pick" data-team="magic" onclick="pickSeries('magic')">
+      <img src="https://cdn.nba.com/logos/nba/1610612753/global/L/logo.svg" alt="" onerror="this.src='https://a.espncdn.com/i/teamlogos/nba/500/orl.png'">
+      <div class="wp-name">Orlando Magic</div>
+    </div>
+    <div class="winner-pick" data-team="pistons" onclick="pickSeries('pistons')">
+      <img src="https://cdn.nba.com/logos/nba/1610612765/global/L/logo.svg" alt="" onerror="this.src='https://a.espncdn.com/i/teamlogos/nba/500/det.png'">
+      <div class="wp-name">Detroit Pistons</div>
+    </div>
   </div>
 
+  <!-- GAMES -->
+  <div class="section-title">Games · Series Picks</div>
+  <div class="games-grid" id="gamesGrid"></div>
+
+  <!-- PLAYER PROPS -->
+  <div class="section-title">Player Props</div>
+  <div class="players-grid" id="playersGrid"></div>
+
+  <!-- CUSTOM LINES -->
+  <div class="section-title">Custom Player Lines</div>
+  <div class="custom-section">
+    <div id="customRows"></div>
+    <button class="ctrl-btn" onclick="addCustomRow()" style="margin-top:8px;">+ Add Line</button>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn" onclick="resetAll()">Reset All Picks</button>
+  </div>
+
+  <footer>★ COACH JOULEY · ALL PICKS SAVED LOCALLY · 2026 ★</footer>
+</div>
+
 <script>
-  const GAMES = [
-    {
-      id: 'orl-det-g3',
-      series: 'East · ORL leads 1-1 · Game 3',
-      tipoff: '19:00 CEST',
-      home: { code: 'ORL', name: 'Magic', loc: 'Orlando' },
-      away: { code: 'DET', name: 'Pistons', loc: 'Detroit' }
-    },
-    {
-      id: 'phx-okc-g3',
-      series: 'West · OKC leads 2-0 · Game 3',
-      tipoff: '21:30 CEST',
-      home: { code: 'PHX', name: 'Suns', loc: 'Phoenix' },
-      away: { code: 'OKC', name: 'Thunder', loc: 'Oklahoma City' }
-    },
-    {
-      id: 'atl-nyk-g4',
-      series: 'East · ATL leads 2-1 · Game 4',
-      tipoff: '00:00 CEST',
-      home: { code: 'ATL', name: 'Hawks', loc: 'Atlanta' },
-      away: { code: 'NYK', name: 'Knicks', loc: 'New York' }
-    },
-    {
-      id: 'min-den-g4',
-      series: 'West · MIN leads 2-1 · Game 4',
-      tipoff: '02:30 CEST',
-      home: { code: 'MIN', name: 'Timberwolves', loc: 'Minnesota' },
-      away: { code: 'DEN', name: 'Nuggets', loc: 'Denver' }
-    }
-  ];
+const STORAGE_KEY = 'coachJouleyMagicPistons2026';
 
-  const LOGO = {
-    ATL: 'https://a.espncdn.com/i/teamlogos/nba/500/atl.png',
-    BOS: 'https://a.espncdn.com/i/teamlogos/nba/500/bos.png',
-    BKN: 'https://a.espncdn.com/i/teamlogos/nba/500/bkn.png',
-    CHA: 'https://a.espncdn.com/i/teamlogos/nba/500/cha.png',
-    CHI: 'https://a.espncdn.com/i/teamlogos/nba/500/chi.png',
-    CLE: 'https://a.espncdn.com/i/teamlogos/nba/500/cle.png',
-    DAL: 'https://a.espncdn.com/i/teamlogos/nba/500/dal.png',
-    DEN: 'https://a.espncdn.com/i/teamlogos/nba/500/den.png',
-    DET: 'https://a.espncdn.com/i/teamlogos/nba/500/det.png',
-    GSW: 'https://a.espncdn.com/i/teamlogos/nba/500/gs.png',
-    HOU: 'https://a.espncdn.com/i/teamlogos/nba/500/hou.png',
-    IND: 'https://a.espncdn.com/i/teamlogos/nba/500/ind.png',
-    LAC: 'https://a.espncdn.com/i/teamlogos/nba/500/lac.png',
-    LAL: 'https://a.espncdn.com/i/teamlogos/nba/500/lal.png',
-    MEM: 'https://a.espncdn.com/i/teamlogos/nba/500/mem.png',
-    MIA: 'https://a.espncdn.com/i/teamlogos/nba/500/mia.png',
-    MIL: 'https://a.espncdn.com/i/teamlogos/nba/500/mil.png',
-    MIN: 'https://a.espncdn.com/i/teamlogos/nba/500/min.png',
-    NOP: 'https://a.espncdn.com/i/teamlogos/nba/500/no.png',
-    NYK: 'https://a.espncdn.com/i/teamlogos/nba/500/ny.png',
-    OKC: 'https://a.espncdn.com/i/teamlogos/nba/500/okc.png',
-    ORL: 'https://a.espncdn.com/i/teamlogos/nba/500/orl.png',
-    PHI: 'https://a.espncdn.com/i/teamlogos/nba/500/phi.png',
-    PHX: 'https://a.espncdn.com/i/teamlogos/nba/500/phx.png',
-    POR: 'https://a.espncdn.com/i/teamlogos/nba/500/por.png',
-    SAC: 'https://a.espncdn.com/i/teamlogos/nba/500/sac.png',
-    SAS: 'https://a.espncdn.com/i/teamlogos/nba/500/sa.png',
-    TOR: 'https://a.espncdn.com/i/teamlogos/nba/500/tor.png',
-    UTA: 'https://a.espncdn.com/i/teamlogos/nba/500/utah.png',
-    WAS: 'https://a.espncdn.com/i/teamlogos/nba/500/wsh.png'
+const MAGIC_LOGO = 'https://cdn.nba.com/logos/nba/1610612753/global/L/logo.svg';
+const MAGIC_FALLBACK = 'https://a.espncdn.com/i/teamlogos/nba/500/orl.png';
+const PISTONS_LOGO = 'https://cdn.nba.com/logos/nba/1610612765/global/L/logo.svg';
+const PISTONS_FALLBACK = 'https://a.espncdn.com/i/teamlogos/nba/500/det.png';
+
+const GAMES = [
+  { id: 'g1', num: 1, date: 'Apr 19', location: '@ Detroit', result: 'Magic 102, Pistons 96' },
+  { id: 'g2', num: 2, date: 'Apr 21', location: '@ Detroit', result: 'Pistons 100, Magic 84' },
+  { id: 'g3', num: 3, date: 'Apr 25', location: '@ Orlando', result: 'Magic 113, Pistons 105' },
+  { id: 'g4', num: 4, date: 'Apr 27', location: '@ Orlando', result: 'Magic 99, Pistons 88' },
+  { id: 'g5', num: 5, date: 'Apr 29', location: '@ Detroit', result: 'Pistons 124, Magic 118' },
+  { id: 'g6', num: 6, date: 'May 1',  location: '@ Orlando', result: 'Pistons 110, Magic 108' },
+  { id: 'g7', num: 7, date: 'May 3',  location: '@ Detroit', result: 'Pistons 119, Magic 87' }
+];
+
+const PLAYERS = [
+  {
+    id: 'banchero',
+    name: 'Paolo Banchero',
+    team: 'Orlando Magic',
+    teamLogo: MAGIC_LOGO, teamFallback: MAGIC_FALLBACK,
+    initials: 'PB',
+    photo: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1631094.png',
+    props: [
+      { key: 'pts', label: 'Points' },
+      { key: 'reb', label: 'Rebounds' },
+      { key: 'ast', label: 'Assists' },
+      { key: '3pm', label: '3PT Made' }
+    ]
+  },
+  {
+    id: 'wcj',
+    name: 'Wendell Carter Jr.',
+    team: 'Orlando Magic',
+    teamLogo: MAGIC_LOGO, teamFallback: MAGIC_FALLBACK,
+    initials: 'WC',
+    photo: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1628976.png',
+    props: [
+      { key: 'pts', label: 'Points' },
+      { key: 'reb', label: 'Rebounds' },
+      { key: 'ast', label: 'Assists' },
+      { key: 'blk', label: 'Blocks' }
+    ]
+  },
+  {
+    id: 'cade',
+    name: 'Cade Cunningham',
+    team: 'Detroit Pistons',
+    teamLogo: PISTONS_LOGO, teamFallback: PISTONS_FALLBACK,
+    initials: 'CC',
+    photo: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1630595.png',
+    props: [
+      { key: 'pts', label: 'Points' },
+      { key: 'reb', label: 'Rebounds' },
+      { key: 'ast', label: 'Assists' },
+      { key: '3pm', label: '3PT Made' }
+    ]
+  }
+];
+
+// STATE
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return {
+    seriesWinner: null,
+    games: {},
+    players: {},
+    custom: [{ id: 'c1', name: '', stat: '', line: '', pick: null }]
   };
+}
 
-  const STORAGE_KEY = 'coachJouleyNBAPicks_2026_04_25';
-  let picks = {};
-  try { picks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { picks = {}; }
-  function savePicks() { localStorage.setItem(STORAGE_KEY, JSON.stringify(picks)); }
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
 
-  const container = document.getElementById('games');
+// SERIES WINNER
+function pickSeries(team) {
+  state.seriesWinner = state.seriesWinner === team ? null : team;
+  saveState();
+  renderSeriesWinner();
+}
+function renderSeriesWinner() {
+  document.querySelectorAll('.winner-pick').forEach(el => {
+    el.classList.toggle('selected', el.dataset.team === state.seriesWinner);
+  });
+}
 
+// GAMES
+function pickGameTeam(gameId, team) {
+  if (!state.games[gameId]) state.games[gameId] = {};
+  state.games[gameId].pick = state.games[gameId].pick === team ? null : team;
+  saveState();
+  renderGames();
+}
+function setGameLine(gameId, line) {
+  if (!state.games[gameId]) state.games[gameId] = {};
+  state.games[gameId].line = line;
+  saveState();
+}
+function pickGameOU(gameId, choice) {
+  if (!state.games[gameId]) state.games[gameId] = {};
+  state.games[gameId].ou = state.games[gameId].ou === choice ? null : choice;
+  saveState();
+  renderGames();
+}
+
+function renderGames() {
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '';
   GAMES.forEach(g => {
+    const s = state.games[g.id] || {};
     const card = document.createElement('div');
-    card.className = 'game';
-    card.dataset.game = g.id;
+    card.className = 'game-card';
     card.innerHTML = `
-      <div class="game-meta">
-        <span class="series">${g.series}</span>
-        <span class="tipoff">${g.tipoff}</span>
+      <div class="game-header">
+        <span class="game-num">GAME ${g.num}</span>
+        <span class="game-date">${g.date} · ${g.location}</span>
       </div>
-      <div class="teams">
-        <div class="team" data-team="${g.away.code}">
-          <div class="logo"><img src="${LOGO[g.away.code]}" alt="${g.away.name}"></div>
-          <div class="team-name">${g.away.name}</div>
-          <div class="team-loc">${g.away.loc} · Away</div>
+      <div class="game-result">RESULT: <strong>${g.result}</strong></div>
+      <div class="gc-teams">
+        <div class="gc-team ${s.pick === 'magic' ? 'selected' : ''}" onclick="pickGameTeam('${g.id}','magic')">
+          <img src="${MAGIC_LOGO}" onerror="this.src='${MAGIC_FALLBACK}'" alt="">
+          <div class="gc-team-name">MAGIC</div>
         </div>
-        <div class="vs">@</div>
-        <div class="team" data-team="${g.home.code}">
-          <div class="logo"><img src="${LOGO[g.home.code]}" alt="${g.home.name}"></div>
-          <div class="team-name">${g.home.name}</div>
-          <div class="team-loc">${g.home.loc} · Home</div>
+        <div class="gc-team ${s.pick === 'pistons' ? 'selected' : ''}" onclick="pickGameTeam('${g.id}','pistons')">
+          <img src="${PISTONS_LOGO}" onerror="this.src='${PISTONS_FALLBACK}'" alt="">
+          <div class="gc-team-name">PISTONS</div>
         </div>
       </div>
-      <div class="bet-row">
-        <div class="bet-section">
-          <div class="bet-label">Over / Under</div>
-          <input class="line-input" type="text" inputmode="decimal" placeholder="z.B. 215.5" data-field="ouLine">
-          <div class="pick-btns">
-            <button class="pick-btn" data-field="ou" data-value="over">Over ↑</button>
-            <button class="pick-btn" data-field="ou" data-value="under">Under ↓</button>
-          </div>
-        </div>
-        <div class="bet-section">
-          <div class="bet-label">Handicap</div>
-          <input class="line-input" type="text" inputmode="text" placeholder="z.B. -4.5 / +4.5" data-field="hcpLine">
-          <div class="pick-btns">
-            <button class="pick-btn" data-field="hcp" data-value="${g.away.code}">${g.away.code}</button>
-            <button class="pick-btn" data-field="hcp" data-value="${g.home.code}">${g.home.code}</button>
-          </div>
+      <div class="ou-block">
+        <div class="ou-label">Total Points · Over/Under</div>
+        <div class="ou-row">
+          <input class="ou-input" type="number" step="0.5" placeholder="Line z.B. 215.5"
+                 value="${s.line || ''}"
+                 oninput="setGameLine('${g.id}', this.value)">
+          <button class="ou-btn ${s.ou === 'over' ? 'over-sel' : ''}" onclick="pickGameOU('${g.id}','over')">OVER ↑</button>
+          <button class="ou-btn ${s.ou === 'under' ? 'under-sel' : ''}" onclick="pickGameOU('${g.id}','under')">UNDER ↓</button>
         </div>
       </div>
     `;
-    container.appendChild(card);
+    grid.appendChild(card);
   });
+}
 
-  function applyState() {
-    document.querySelectorAll('.game').forEach(card => {
-      const gid = card.dataset.game;
-      const data = picks[gid] || {};
-      card.querySelectorAll('.team').forEach(t => {
-        t.classList.toggle('selected', data.winner === t.dataset.team);
-      });
-      card.querySelectorAll('.line-input').forEach(inp => {
-        inp.value = data[inp.dataset.field] || '';
-      });
-      card.querySelectorAll('.pick-btn').forEach(btn => {
-        btn.classList.toggle('active', data[btn.dataset.field] === btn.dataset.value);
-      });
-    });
-  }
+// PLAYERS
+function setPlayerLine(playerId, propKey, line) {
+  if (!state.players[playerId]) state.players[playerId] = {};
+  if (!state.players[playerId][propKey]) state.players[playerId][propKey] = {};
+  state.players[playerId][propKey].line = line;
+  saveState();
+}
+function pickPlayerOU(playerId, propKey, choice) {
+  if (!state.players[playerId]) state.players[playerId] = {};
+  if (!state.players[playerId][propKey]) state.players[playerId][propKey] = {};
+  state.players[playerId][propKey].ou = state.players[playerId][propKey].ou === choice ? null : choice;
+  saveState();
+  renderPlayers();
+}
 
-  document.querySelectorAll('.team').forEach(t => {
-    t.addEventListener('click', () => {
-      const card = t.closest('.game');
-      const gid = card.dataset.game;
-      if (!picks[gid]) picks[gid] = {};
-      picks[gid].winner = picks[gid].winner === t.dataset.team ? null : t.dataset.team;
-      savePicks(); applyState();
-    });
+function renderPlayers() {
+  const grid = document.getElementById('playersGrid');
+  grid.innerHTML = '';
+  PLAYERS.forEach(p => {
+    const ps = state.players[p.id] || {};
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    const propsHtml = p.props.map(prop => {
+      const sp = ps[prop.key] || {};
+      return `
+        <div class="prop-row">
+          <span class="prop-label">${prop.label}</span>
+          <input class="prop-input" type="number" step="0.5" placeholder="Line"
+                 value="${sp.line || ''}"
+                 oninput="setPlayerLine('${p.id}','${prop.key}', this.value)">
+          <button class="prop-btn ${sp.ou === 'over' ? 'sel' : ''}" onclick="pickPlayerOU('${p.id}','${prop.key}','over')">OVER</button>
+          <button class="prop-btn ${sp.ou === 'under' ? 'sel' : ''}" onclick="pickPlayerOU('${p.id}','${prop.key}','under')">UNDER</button>
+        </div>
+      `;
+    }).join('');
+    card.innerHTML = `
+      <div class="player-header">
+        <div class="player-avatar">
+          <img src="${p.photo}" alt="${p.name}" onerror="this.parentElement.innerHTML='${p.initials}'">
+        </div>
+        <div class="player-info">
+          <div class="player-name">${p.name}</div>
+          <div class="player-team">${p.team}</div>
+        </div>
+        <img class="player-team-logo" src="${p.teamLogo}" onerror="this.src='${p.teamFallback}'" alt="">
+      </div>
+      <div class="props-list">${propsHtml}</div>
+    `;
+    grid.appendChild(card);
   });
+}
 
-  document.querySelectorAll('.pick-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.game');
-      const gid = card.dataset.game;
-      const f = btn.dataset.field;
-      if (!picks[gid]) picks[gid] = {};
-      picks[gid][f] = picks[gid][f] === btn.dataset.value ? null : btn.dataset.value;
-      savePicks(); applyState();
-    });
+// CUSTOM
+function addCustomRow() {
+  const newId = 'c' + Date.now();
+  state.custom.push({ id: newId, name: '', stat: '', line: '', pick: null });
+  saveState();
+  renderCustom();
+}
+function updateCustomField(id, field, val) {
+  const row = state.custom.find(r => r.id === id);
+  if (!row) return;
+  row[field] = val;
+  saveState();
+}
+function pickCustomOU(id, choice) {
+  const row = state.custom.find(r => r.id === id);
+  if (!row) return;
+  row.pick = row.pick === choice ? null : choice;
+  saveState();
+  renderCustom();
+}
+function removeCustomRow(id) {
+  state.custom = state.custom.filter(r => r.id !== id);
+  if (state.custom.length === 0) state.custom.push({ id: 'c1', name: '', stat: '', line: '', pick: null });
+  saveState();
+  renderCustom();
+}
+
+function renderCustom() {
+  const wrap = document.getElementById('customRows');
+  wrap.innerHTML = '';
+  state.custom.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'custom-row';
+    div.innerHTML = `
+      <input type="text" placeholder="Spielername" value="${row.name || ''}"
+             oninput="updateCustomField('${row.id}','name', this.value)">
+      <input type="text" placeholder="Stat (z.B. PTS)" value="${row.stat || ''}"
+             oninput="updateCustomField('${row.id}','stat', this.value)">
+      <input type="number" step="0.5" placeholder="Line" value="${row.line || ''}"
+             oninput="updateCustomField('${row.id}','line', this.value)">
+      <button class="prop-btn ${row.pick === 'over' ? 'sel' : ''}" onclick="pickCustomOU('${row.id}','over')">OVER</button>
+      <button class="prop-btn ${row.pick === 'under' ? 'sel' : ''}" onclick="pickCustomOU('${row.id}','under')">UNDER</button>
+    `;
+    wrap.appendChild(div);
+
+    // Remove button (separate row on small layouts)
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'ctrl-btn';
+    removeBtn.style.cssText = 'padding:4px 12px;font-size:9px;margin-bottom:8px;opacity:0.5;';
+    removeBtn.textContent = '× Remove';
+    removeBtn.onclick = () => removeCustomRow(row.id);
+    wrap.appendChild(removeBtn);
   });
+}
 
-  document.querySelectorAll('.line-input').forEach(inp => {
-    inp.addEventListener('input', () => {
-      const card = inp.closest('.game');
-      const gid = card.dataset.game;
-      if (!picks[gid]) picks[gid] = {};
-      picks[gid][inp.dataset.field] = inp.value;
-      savePicks();
-    });
-  });
+// RESET
+function resetAll() {
+  if (!confirm('Alle Picks zurücksetzen?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = loadState();
+  renderAll();
+}
 
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    if (confirm('Wirklich alle Picks zurücksetzen?')) {
-      picks = {};
-      localStorage.removeItem(STORAGE_KEY);
-      applyState();
-    }
-  });
+function renderAll() {
+  renderSeriesWinner();
+  renderGames();
+  renderPlayers();
+  renderCustom();
+}
 
-  applyState();
+renderAll();
 </script>
 </body>
 </html>
